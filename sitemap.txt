@@ -1,3 +1,11 @@
-http://example.com/2023/12/13/Kokomi/
-http://example.com/2023/12/13/hello-world/
+http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
+http://example.com/2023/12/13/HyprlandQQ/
 http://example.com/
+http://example.com/tags/linux/
+http://example.com/tags/linux-%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
+http://example.com/tags/hyprland-linuxqq/
+http://example.com/tags/hyprland%E3%80%81linuxqq/
+http://example.com/tags/linux%E3%80%81%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
+http://example.com/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
+http://example.com/tags/hyprland/
+http://example.com/tags/linuxqq/

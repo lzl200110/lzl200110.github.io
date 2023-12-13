@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-12-13T09:53:41.459Z</updated>
+  <updated>2023-12-13T10:45:58.436Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Kokomi</title>
-    <link href="http://example.com/2023/12/13/Kokomi/"/>
-    <id>http://example.com/2023/12/13/Kokomi/</id>
+    <title>Hyprland QQ 关闭后无法打开GUI窗口解决方案</title>
+    <link href="http://example.com/2023/12/13/HyprlandQQ/"/>
+    <id>http://example.com/2023/12/13/HyprlandQQ/</id>
+    <published>2023-12-13T10:00:55.000Z</published>
+    <updated>2023-12-13T10:45:58.436Z</updated>
+    
+    <content type="html"><![CDATA[<p>Hyprland 关闭窗口一般绑定到快捷键(如：Win +K )，调用 exec killactive 来关闭窗口，关闭窗口不等于关闭程序，这样会导致部分程序的GUI窗口关闭后无法再次打开(该程序还在运行，如QQ等)。</p><p>可以通过 <strong>dispatch killactive</strong> 事件来对部分无法正常工作的程序来特化，killactive 修改为：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! ~/.config/hypr/scripts/killactive.sh</span></span><br><span class="line">file_path=<span class="string">&quot;<span class="variable">$HOME</span>/.config/QQ/qq_window_id&quot;</span></span><br><span class="line"><span class="built_in">echo</span> $(hyprctl activewindow -j | jq -r <span class="string">&quot;.class&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(hyprctl activewindow -j | jq -r <span class="string">&quot;.class&quot;</span>)</span>&quot;</span> = <span class="string">&quot;QQ&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    wid=`xdotool getactivewindow`</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$wid</span> &gt; <span class="variable">$file_path</span> </span><br><span class="line">    xdotool windowunmap <span class="variable">$wid</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    hyprctl dispatch killactive <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>这段代码作用是：若关闭的窗口为QQ,记录窗口 id ，使用 <code>xdotool windowunmap</code> 来<code>unmap</code>窗口，不关闭窗口。</p><p>恢复QQ窗口对应为</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! ~/.config/hypr/scripts/resumeQQ.sh</span></span><br><span class="line">file_path=<span class="string">&quot;<span class="variable">$HOME</span>/.config/QQ/qq_window_id&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$file_path</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    w_id=$(<span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$file_path</span>&quot;</span>)</span><br><span class="line">    xdotool windowmap <span class="variable">$w_id</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    bash linuxqq   </span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><p>检查<strong>window_id</strong> 是否存在，存在就<code>xdotool windowmap</code> 窗口，不存在就启动QQ程序</p><p>以上解决方法需要在启动Hyprland时删除 <strong>qq_window_id</strong> 文件，向<strong>hyprland.conf</strong> 中添加该行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec-once = rm -f ~/.config/QQ/qq_window_id</span><br></pre></td></tr></table></figure><p>配置设置快捷键如下(根据个人喜好配置)：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$mainMod = SUPER</span><br><span class="line">bind = $mainMod, Z, exec, bash ~/.config/hypr/scripts/resumeQQ.sh               # QQ</span><br><span class="line">bind = $mainMod+SHIFT, Z, exec, killall -SIGUSR1 /opt/QQ/qq                     # close QQ</span><br><span class="line">bind = $mainMod, K, exec, bash ~/.config/hypr/scripts/killactive.sh             # kill windows</span><br></pre></td></tr></table></figure><p>即可实现<code>Win +K</code> 关闭窗口，<code>Win + Z</code> 打开QQ，<code>Win + Shift +Z</code> 退出QQ</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Hyprland 关闭窗口一般绑定到快捷键(如：Win +K )，调用 exec killactive 来关闭窗口，关闭窗口不等于关闭程序，这样会导致部分程序的GUI窗口关闭后无法再次打开(该程序还在运行，如QQ等)。&lt;/p&gt;
+&lt;p&gt;可以通过 &lt;strong&gt;dispatc</summary>
+      
+    
+    
+    
+    
+    <category term="hyprland" scheme="http://example.com/tags/hyprland/"/>
+    
+    <category term="linuxqq" scheme="http://example.com/tags/linuxqq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux Kokomi(珊瑚宫心海)光标主题</title>
+    <link href="http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
+    <id>http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/</id>
     <published>2023-12-13T09:37:38.000Z</published>
-    <updated>2023-12-13T09:53:41.459Z</updated>
+    <updated>2023-12-13T10:46:08.976Z</updated>
     
     <content type="html"><![CDATA[<h1 id="cursor-therme-Kokomi"><a href="#cursor-therme-Kokomi" class="headerlink" title="cursor_therme (Kokomi)"></a>cursor_therme (Kokomi)</h1><p>珊瑚宫心海主题，适用于linux系统<br>cursors_32、cursors_48、cursor_128分别对应<code>32*32</code>、<code>48*48</code>和<code>128*128</code>大小的鼠标指针</p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ul><li><code>git clone https://github.com/lzl200110/Kokomi-cursor.git</code></li><li>将Kokomi文件放到 &#x2F;usr&#x2F;share&#x2F;icons&#x2F;</li><li>选择合适大小文件命名为cursors</li><li>设置光标主题为kokomi<br>  参见 <a href="https://wiki.archlinuxcn.org/wiki/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98">https://wiki.archlinuxcn.org/wiki/光标主题</a></li></ul><h2 id="指针预览"><a href="#指针预览" class="headerlink" title="指针预览"></a>指针预览</h2><p><img src="/../img/image_kokomi.png" alt="Alt text"></p>]]></content>
     
@@ -34,25 +59,9 @@
     
     
     
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://example.com/2023/12/13/hello-world/"/>
-    <id>http://example.com/2023/12/13/hello-world/</id>
-    <published>2023-12-13T09:18:59.866Z</published>
-    <updated>2023-12-13T09:18:59.866Z</updated>
+    <category term="linux" scheme="http://example.com/tags/linux/"/>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
-      
-    
-    
-    
+    <category term="光标主题" scheme="http://example.com/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
     
   </entry>
   
