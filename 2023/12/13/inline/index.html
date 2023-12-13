@@ -3,14 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>浅析C++中的inline关键字 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="背景inline关键字一直被认为去声明内联函数(优先采用函数的内联替换而非进行函数调用)，然而关键词 inline 的含义是非强制的，编译器拥有对任何未标记为inline的函数使用内联替换的自由，和对任何标记为 inline 的函数生成函数调用的自由。换句话说函数是否内联，与是否被inlineo标识无关，而由编译器(优化参数)决定。 ODR(one define rule) 单一定义原则ORD的要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析C++中的inline关键字">
+<meta property="og:url" content="http://example.com/2023/12/13/inline/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景inline关键字一直被认为去声明内联函数(优先采用函数的内联替换而非进行函数调用)，然而关键词 inline 的含义是非强制的，编译器拥有对任何未标记为inline的函数使用内联替换的自由，和对任何标记为 inline 的函数生成函数调用的自由。换句话说函数是否内联，与是否被inlineo标识无关，而由编译器(优化参数)决定。 ODR(one define rule) 单一定义原则ORD的要">
 <meta property="og:locale">
+<meta property="article:published_time" content="2023-12-13T11:49:21.000Z">
+<meta property="article:modified_time" content="2023-12-13T13:11:40.769Z">
 <meta property="article:author" content="Yuinhai">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="inline">
+<meta property="article:tag" content="ODR">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -49,7 +56,7 @@
     <div class="collapse navbar-collapse" id="main-menu-navbar">
       <ul class="nav navbar-nav">
         
-          <li><a class="active"
+          <li><a class=""
                  href="/index.html">Home</a></li>
         
           <li><a class=""
@@ -76,15 +83,13 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-    <article id="post-inline" class="article article-type-post" itemscope itemprop="blogPost">
+          <article id="post-inline" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/13/inline/">浅析C++中的inline关键字</a>
+    <h1 class="article-title" itemprop="name">
+      浅析C++中的inline关键字
     </h1>
   
 
@@ -156,213 +161,22 @@
     </footer>
   </div>
   
-</article>
-
-
-
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
   
-    <article id="post-wayland腾讯会议" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
+  <li role="presentation">
+    <a href="/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">linux wayland 腾讯会议 无法共享屏幕解决方案</span>
+    </a>
+  </li>
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/">linux wayland 腾讯会议 无法共享屏幕解决方案</a>
-    </h1>
   
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/" class="article-date"><time datetime="2023-12-13T11:06:25.000Z" itemprop="datePublished">2023-12-13</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a> / <a class="article-category-link" href="/categories/linux/wemeebin/">wemeebin</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>linux上腾讯会议不支持wayland 协议导致屏幕共享时无法捕获屏幕。<br>使用<code>wemeet-x11</code>启动腾讯会议，开启效果如下<br><img src="/../img/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE1.png" alt="Alt text"><br>可以看到桌面1和桌面2均显示全黑，说明无法捕获。</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>使用obs采集屏幕创建虚拟摄像头，腾讯会议通过虚拟摄像头来共享屏幕。<br>参见：<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%B1%8F%E5%B9%95%E6%8D%95%E8%8E%B7">https://wiki.archlinuxcn.org/wiki/屏幕捕获</a></p>
-<ol>
-<li>安装 <strong>obs-studio</strong>、<strong>v4l2loopback-dkms</strong>依赖包<br><code>paru -S obs-studio v4l2loopback-dkms</code></li>
-<li>创建虚拟摄像头</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo modprobe v4l2loopback devices=1 video_nr=10 card_label=&#x27;OBS Cam&#x27; exclusive_caps=1</span><br><span class="line">sudo modprobe snd-aloop index=10 id=&#x27;OBS Mic&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>3.开启obs, source选择要分享的屏幕, 启动虚拟摄像头<br><img src="/../img/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE2.png" alt="Alt text"></p>
-<p>4.开启腾讯会议，通过开启虚拟摄像头实现屏幕共享，效果如下：</p>
-<p><img src="/../img/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE3.png" alt="Alt text"></p>
-<p>Tip:如果出现屏幕镜像，在腾讯会议-&gt;设置-&gt;虚拟背景中关闭视频镜像。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/" data-id="clq3pdkih000iitmaem3q0u3z" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wayland/" rel="tag">wayland</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wemeebin/" rel="tag">wemeebin</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-HyprlandQQ" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/13/HyprlandQQ/">Hyprland QQ 关闭后无法打开GUI窗口解决方案</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2023/12/13/HyprlandQQ/" class="article-date"><time datetime="2023-12-13T10:00:55.000Z" itemprop="datePublished">2023-12-13</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a> / <a class="article-category-link" href="/categories/linux/linuxqq/">linuxqq</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hyprland 关闭窗口一般绑定到快捷键(如：Win +K )，调用 exec killactive 来关闭窗口，关闭窗口不等于关闭程序，这样会导致部分程序的GUI窗口关闭后无法再次打开(该程序还在运行，如QQ等)。</p>
-<p>可以通过 <strong>dispatch killactive</strong> 事件来对部分无法正常工作的程序来特化，killactive 修改为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! ~/.config/hypr/scripts/killactive.sh</span></span><br><span class="line">file_path=<span class="string">&quot;<span class="variable">$HOME</span>/.config/QQ/qq_window_id&quot;</span></span><br><span class="line"><span class="built_in">echo</span> $(hyprctl activewindow -j | jq -r <span class="string">&quot;.class&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(hyprctl activewindow -j | jq -r <span class="string">&quot;.class&quot;</span>)</span>&quot;</span> = <span class="string">&quot;QQ&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    wid=`xdotool getactivewindow`</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$wid</span> &gt; <span class="variable">$file_path</span> </span><br><span class="line">    xdotool windowunmap <span class="variable">$wid</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    hyprctl dispatch killactive <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<p>这段代码作用是：若关闭的窗口为QQ,记录窗口 id ，使用 <code>xdotool windowunmap</code> 来<code>unmap</code>窗口，不关闭窗口。</p>
-<p>恢复QQ窗口对应为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! ~/.config/hypr/scripts/resumeQQ.sh</span></span><br><span class="line">file_path=<span class="string">&quot;<span class="variable">$HOME</span>/.config/QQ/qq_window_id&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$file_path</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    w_id=$(<span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$file_path</span>&quot;</span>)</span><br><span class="line">    xdotool windowmap <span class="variable">$w_id</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    bash linuxqq   </span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<p>检查<strong>window_id</strong> 是否存在，存在就<code>xdotool windowmap</code> 窗口，不存在就启动QQ程序</p>
-<p>以上解决方法需要在启动Hyprland时删除 <strong>qq_window_id</strong> 文件，向<strong>hyprland.conf</strong> 中添加该行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec-once = rm -f ~/.config/QQ/qq_window_id</span><br></pre></td></tr></table></figure>
-
-<p>配置设置快捷键如下(根据个人喜好配置)：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$mainMod = SUPER</span><br><span class="line">bind = $mainMod, Z, exec, bash ~/.config/hypr/scripts/resumeQQ.sh               # QQ</span><br><span class="line">bind = $mainMod+SHIFT, Z, exec, killall -SIGUSR1 /opt/QQ/qq                     # close QQ</span><br><span class="line">bind = $mainMod, K, exec, bash ~/.config/hypr/scripts/killactive.sh             # kill windows</span><br></pre></td></tr></table></figure>
-<p>即可实现<code>Win +K</code> 关闭窗口，<code>Win + Z</code> 打开QQ，<code>Win + Shift +Z</code> 退出QQ</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/12/13/HyprlandQQ/" data-id="clq3pdkh00000itmabk8ybtxu" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hyprland/" rel="tag">hyprland</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linuxqq/" rel="tag">linuxqq</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Kokomi光标主题" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/">linux Kokomi(珊瑚宫心海)光标主题</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" class="article-date"><time datetime="2023-12-13T09:37:38.000Z" itemprop="datePublished">2023-12-13</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a> / <a class="article-category-link" href="/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/">光标主题</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="cursor-therme-Kokomi"><a href="#cursor-therme-Kokomi" class="headerlink" title="cursor_therme (Kokomi)"></a>cursor_therme (Kokomi)</h1><p>珊瑚宫心海主题，适用于linux系统<br>cursors_32、cursors_48、cursor_128分别对应<code>32*32</code>、<code>48*48</code>和<code>128*128</code>大小的鼠标指针</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ul>
-<li><code>git clone https://github.com/lzl200110/Kokomi-cursor.git</code></li>
-<li>将Kokomi文件放到 &#x2F;usr&#x2F;share&#x2F;icons&#x2F;</li>
-<li>选择合适大小文件命名为cursors</li>
-<li>设置光标主题为kokomi<br>  参见 <a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98">https://wiki.archlinuxcn.org/wiki/光标主题</a></li>
 </ul>
-<h2 id="指针预览"><a href="#指针预览" class="headerlink" title="指针预览"></a>指针预览</h2><p><img src="/../img/image_kokomi.png" alt="Alt text"></p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" data-id="clq3pdkhj0001itma7xbs1772" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" rel="tag">光标主题</a></li></ul>
 
 
-    </footer>
-  </div>
   
 </article>
-
-
-
-  
 
 
 

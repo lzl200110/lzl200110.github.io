@@ -1,3 +1,4 @@
+http://example.com/2023/12/13/inline/
 http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/
 http://example.com/2023/12/13/HyprlandQQ/
 http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
@@ -8,7 +9,11 @@ http://example.com/tags/linux/
 http://example.com/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
 http://example.com/tags/wayland/
 http://example.com/tags/wemeebin/
+http://example.com/tags/c/
+http://example.com/tags/inline/
+http://example.com/tags/ODR/
 http://example.com/categories/linux/
 http://example.com/categories/linux/linuxqq/
 http://example.com/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
 http://example.com/categories/linux/wemeebin/
+http://example.com/categories/c/
