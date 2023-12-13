@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>Kokomi</title>
+      <link href="/2023/12/13/Kokomi/"/>
+      <url>/2023/12/13/Kokomi/</url>
+      
+        <content type="html"><![CDATA[<h1 id="cursor-therme-Kokomi"><a href="#cursor-therme-Kokomi" class="headerlink" title="cursor_therme (Kokomi)"></a>cursor_therme (Kokomi)</h1><p>珊瑚宫心海主题，适用于linux系统<br>cursors_32、cursors_48、cursor_128分别对应<code>32*32</code>、<code>48*48</code>和<code>128*128</code>大小的鼠标指针</p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ul><li><code>git clone https://github.com/lzl200110/Kokomi-cursor.git</code></li><li>将Kokomi文件放到 &#x2F;usr&#x2F;share&#x2F;icons&#x2F;</li><li>选择合适大小文件命名为cursors</li><li>设置光标主题为kokomi<br>  参见 <a href="https://wiki.archlinuxcn.org/wiki/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98">https://wiki.archlinuxcn.org/wiki/光标主题</a></li></ul><h2 id="指针预览"><a href="#指针预览" class="headerlink" title="指针预览"></a>指针预览</h2><p><img src="/../img/image_kokomi.png" alt="Alt text"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2023/12/13/hello-world/"/>
       <url>/2023/12/13/hello-world/</url>

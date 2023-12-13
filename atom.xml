@@ -6,15 +6,35 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-12-13T09:18:59.866Z</updated>
+  <updated>2023-12-13T09:53:41.459Z</updated>
   <id>http://example.com/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>Yuinhai</name>
     
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kokomi</title>
+    <link href="http://example.com/2023/12/13/Kokomi/"/>
+    <id>http://example.com/2023/12/13/Kokomi/</id>
+    <published>2023-12-13T09:37:38.000Z</published>
+    <updated>2023-12-13T09:53:41.459Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="cursor-therme-Kokomi"><a href="#cursor-therme-Kokomi" class="headerlink" title="cursor_therme (Kokomi)"></a>cursor_therme (Kokomi)</h1><p>珊瑚宫心海主题，适用于linux系统<br>cursors_32、cursors_48、cursor_128分别对应<code>32*32</code>、<code>48*48</code>和<code>128*128</code>大小的鼠标指针</p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ul><li><code>git clone https://github.com/lzl200110/Kokomi-cursor.git</code></li><li>将Kokomi文件放到 &#x2F;usr&#x2F;share&#x2F;icons&#x2F;</li><li>选择合适大小文件命名为cursors</li><li>设置光标主题为kokomi<br>  参见 <a href="https://wiki.archlinuxcn.org/wiki/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98">https://wiki.archlinuxcn.org/wiki/光标主题</a></li></ul><h2 id="指针预览"><a href="#指针预览" class="headerlink" title="指针预览"></a>指针预览</h2><p><img src="/../img/image_kokomi.png" alt="Alt text"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;cursor-therme-Kokomi&quot;&gt;&lt;a href=&quot;#cursor-therme-Kokomi&quot; class=&quot;headerlink&quot; title=&quot;cursor_therme (Kokomi)&quot;&gt;&lt;/a&gt;cursor_therme (Kokomi)&lt;/</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
