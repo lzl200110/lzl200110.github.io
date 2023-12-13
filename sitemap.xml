@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/</loc>
+    
+    <lastmod>2023-12-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/</loc>
     
     <lastmod>2023-12-13</lastmod>
@@ -84,6 +93,48 @@
     <priority>0.2</priority>
   </url>
   
+  <url>
+    <loc>http://example.com/tags/linux%EF%BC%8Cwayland%E3%80%81wemeebin/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/linux%EF%BC%8Cwayland%EF%BC%8Cwemeebin/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/wayland/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/wemeebin/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>http://example.com/categories/linux/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/linux/hyprland/</loc>
+    <lastmod>2023-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 </urlset>
