@@ -13,7 +13,7 @@
 <meta property="og:description" content="背景inline关键字一直被认为去声明内联函数(优先采用函数的内联替换而非进行函数调用)，然而关键词 inline 的含义是非强制的，编译器拥有对任何未标记为inline的函数使用内联替换的自由，和对任何标记为 inline 的函数生成函数调用的自由。换句话说函数是否内联，与是否被inlineo标识无关，而由编译器(优化参数)决定。 ODR(one define rule) 单一定义原则ORD的要">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-12-13T11:49:21.000Z">
-<meta property="article:modified_time" content="2023-12-13T13:11:50.692Z">
+<meta property="article:modified_time" content="2023-12-13T13:13:36.956Z">
 <meta property="article:author" content="Yuinhai">
 <meta property="article:tag" content="c++">
 <meta property="article:tag" content="inline">
@@ -47,8 +47,6 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      
-        <a class="navbar-brand" href="/"><img src="/navbrand.png"></a>
       
     </div>
 
@@ -139,7 +137,7 @@
 <h2 id="inline-函数、inline-变量"><a href="#inline-函数、inline-变量" class="headerlink" title="inline 函数、inline 变量"></a>inline 函数、inline 变量</h2><p>前面ODR规则说明了定义在整个程序中只能出现一次, <code>但对于inline函数或inline变量来说，在 ODR 使用了它的每个翻译单元中都需要一个定义</code>。<br>换句话说，inline的函数和变量可以`违背`规则2, 当链接器查找函数时，发现函数是inline的就不考虑它，这样就不会出现重定义的错误。</p>
 <p>举一个例子，你实现了一个head only的日志功能，其代码可能如下：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LogPrintf(level, fmt, ...) \</span></span><br><span class="line"><span class="meta">	LogPrintfFunc(LOG_MODULE_ID, level, std::source_location::current(), fmt, ##__VA_ARGS__)</span></span><br><span class="line"><span class="comment">//！ 通过宏来打印日志</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LogFatal(fmt, ...)  LogPrintf(LOG_LEVEL_FATAL, fmt, ##__VA_ARGS__)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LogErr(fmt, ...)    LogPrintf(LOG_LEVEL_ERROR, fmt, ##__VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//！ 将要打印的内容封装为 LogContent ，然后dispatch，dispatch调用函数将LogContent打印出来</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">LogPrintfFunc</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* module_id, <span class="type">int</span> level, <span class="type">const</span> std::source_location location, <span class="type">const</span> <span class="type">char</span>* fmt,</span></span></span><br><span class="line"><span class="params"><span class="function">                          Args... args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (level &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		level = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (level &gt; LOG_LEVEL_TRACE) &#123;</span><br><span class="line">		level = LOG_LEVEL_TRACE;</span><br><span class="line">	&#125;</span><br><span class="line">	std::string module_id_print = (module_id != <span class="literal">nullptr</span>) ? module_id : <span class="string">&quot;???&quot;</span>;</span><br><span class="line">	<span class="type">const</span> std::chrono::zoned_time now&#123;std::chrono::<span class="built_in">current_zone</span>(), std::chrono::high_resolution_clock::<span class="built_in">now</span>()&#125;;</span><br><span class="line">	std::string text&#123;&#125;;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (fmt != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			text = std::<span class="built_in">vformat</span>(fmt, std::<span class="built_in">make_format_args</span>(args...));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="built_in">catch</span> (std::format_error&amp; e) &#123;</span><br><span class="line">		<span class="built_in">LogPrintfFunc</span>(module_id, LOG_LEVEL_WARN, location, <span class="string">&quot;[format parse error]&quot;</span>, e.<span class="built_in">what</span>());</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	LogContent content = &#123;.thread_id = std::this_thread::<span class="built_in">get_id</span>(),</span><br><span class="line">	                      .timestamp = std::format(<span class="string">&quot;&#123;&#125;&quot;</span>, now),</span><br><span class="line">	                      .module_id = std::<span class="built_in">move</span>(module_id_print),</span><br><span class="line">	                      .location = location,</span><br><span class="line">	                      .level = level,</span><br><span class="line">	                      .text = std::<span class="built_in">move</span>(text)&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch</span>(content);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>你实现了控制是否打印的功能：</p>
+<p>添加了控制是否打印的功能：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//！ 开启日志</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">LogOutput_Enable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (id == <span class="number">0</span>)</span><br><span class="line">		id = <span class="built_in">log_add_print_func</span>(log_output_filterfunc, <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//！ 关闭</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">LogOutput_Disable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">log_remove_print_func</span>(id);</span><br><span class="line">	id = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>完整代码见<a href="../asset/log.hpp">log.hpp</a></p>
 <p>当你使用单个main文件对log进行测试时，发现其运行正常，但到涉及到多个文件依赖log时，就出现了错误。</p>
@@ -186,6 +184,13 @@
   </li>
   
   
+  <li role="presentation">
+    <a href="/2023/12/14/visitor/" id="article-nav-newer" class="article-nav-link-wrap">
+      <span class="article-nav-link-title">visitor</span>
+      <i class="fa fa-chevron-right pull-right"></i>
+    </a>
+  </li>
+  
 </ul>
 
 
@@ -208,7 +213,7 @@
   
   <div class="sidebar-module">
     <h4>Categories</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/c/">c++</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/">linux</a><span class="sidebar-module-list-count">3</span><ul class="sidebar-module-list-child"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/linuxqq/">linuxqq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/wemeebin/">wemeebin</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/">光标主题</a><span class="sidebar-module-list-count">1</span></li></ul></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/c/">c++</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/design-pattern/">design pattern</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/">linux</a><span class="sidebar-module-list-count">3</span><ul class="sidebar-module-list-child"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/linuxqq/">linuxqq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/wemeebin/">wemeebin</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/">光标主题</a><span class="sidebar-module-list-count">1</span></li></ul></li></ul>
   </div>
 
 
@@ -216,7 +221,7 @@
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ODR/" rel="tag">ODR</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/" rel="tag">c++</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hyprland/" rel="tag">hyprland</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/inline/" rel="tag">inline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/" rel="tag">linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linuxqq/" rel="tag">linuxqq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/wayland/" rel="tag">wayland</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/wemeebin/" rel="tag">wemeebin</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" rel="tag">光标主题</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ODR/" rel="tag">ODR</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/" rel="tag">c++</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/hyprland/" rel="tag">hyprland</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/inline/" rel="tag">inline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linux/" rel="tag">linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/linuxqq/" rel="tag">linuxqq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/wayland/" rel="tag">wayland</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/wemeebin/" rel="tag">wemeebin</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" rel="tag">光标主题</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="tag">访问者模式</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -225,7 +230,7 @@
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/ODR/" style="font-size: 10px;">ODR</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/hyprland/" style="font-size: 10px;">hyprland</a> <a href="/tags/inline/" style="font-size: 10px;">inline</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linuxqq/" style="font-size: 10px;">linuxqq</a> <a href="/tags/wayland/" style="font-size: 10px;">wayland</a> <a href="/tags/wemeebin/" style="font-size: 10px;">wemeebin</a> <a href="/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" style="font-size: 10px;">光标主题</a>
+      <a href="/tags/ODR/" style="font-size: 10px;">ODR</a> <a href="/tags/c/" style="font-size: 20px;">c++</a> <a href="/tags/hyprland/" style="font-size: 10px;">hyprland</a> <a href="/tags/inline/" style="font-size: 10px;">inline</a> <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/linuxqq/" style="font-size: 10px;">linuxqq</a> <a href="/tags/wayland/" style="font-size: 10px;">wayland</a> <a href="/tags/wemeebin/" style="font-size: 10px;">wemeebin</a> <a href="/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/" style="font-size: 10px;">光标主题</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">访问者模式</a>
     </p>
   </div>
 
@@ -233,7 +238,7 @@
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2023/12/">December 2023</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2023/12/">December 2023</a><span class="sidebar-module-list-count">5</span></li></ul>
   </div>
 
 
@@ -242,6 +247,10 @@
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2023/12/14/visitor/">visitor</a>
+        </li>
       
         <li>
           <a href="/2023/12/13/inline/">浅析C++中的inline关键字</a>
