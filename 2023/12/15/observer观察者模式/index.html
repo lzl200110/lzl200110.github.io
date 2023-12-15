@@ -14,7 +14,7 @@
 <meta property="og:description" content="观察者模式观察者模式似乎是一个经常被使用的设计模式，其核心思想是:当我要观察变化的对象时，不需要进行轮询，只需要在对象那里进行注册，当对象变化时，其自动提醒我发生了变化(执行我注册的回调)。 典型的代码实现如下： 12345678910111213141516171819202122232425262728template &lt;typename T&gt; class Observer &amp;#1">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-12-15T02:31:47.000Z">
-<meta property="article:modified_time" content="2023-12-15T07:54:10.184Z">
+<meta property="article:modified_time" content="2023-12-15T08:04:51.281Z">
 <meta property="article:author" content="Yuinhai">
 <meta property="article:tag" content="c++">
 <meta property="article:tag" content="设计模式">
@@ -198,10 +198,25 @@
 <p>对于可重入的观察者，将<code>mutex</code>替换为<code>recursivee_mutex</code>往往是可以的，能够一定程度上避免死锁的产生。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>观察者模式是被广泛使用的设计模式，在实现时，需要考虑以下几个方面：</p>
 <ul>
-<li>希望为观察者传递什么信息?</li>
-<li>如何处理取消订阅的接口?</li>
-<li>观察者会被多线程调用吗,需要可重入吗?</li>
-<li>允许观察者多次注册吗?</li>
+<li><strong>希望为观察者传递什么信息</strong>? <ul>
+<li>例如，处理域成员(属性)的变化，则可以包含属性的名称和对应的值。</li>
+</ul>
+</li>
+<li><strong>如何处理取消订阅的接口</strong>?<ul>
+<li>如果不提供取消订阅的接口，那么也就不存在可重入的问题了，大大简化了实现。</li>
+<li>如果提供取消订阅的接口，是直接移除，还是先标记后移除?</li>
+<li>如果不喜欢原始指针做分发，可以使用weak_ptr存储观察者。</li>
+</ul>
+</li>
+<li><strong>观察者会被多线程调用吗</strong>?如果需要，则需要管理订阅列表<ul>
+<li>在所有相关代码中加锁，注意避免死锁</li>
+<li>使用线程安全的容器，但可能会损失按序相关的特性。</li>
+</ul>
+</li>
+<li><strong>允许观察者多次注册吗</strong>? <ul>
+<li>如果允许，那么不能使用set来存储观察者</li>
+</ul>
+</li>
 </ul>
 
   </div>
