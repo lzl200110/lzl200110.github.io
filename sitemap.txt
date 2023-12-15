@@ -1,4 +1,7 @@
-http://example.com/2023/12/14/visitor/
+http://example.com/2023/12/15/observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/
+http://example.com/2023/12/14/visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/
+http://example.com/2023/12/14/buildera%E6%9E%84%E5%BB%BA%E8%80%85%E6%A8%A1%E5%BC%8F/
+http://example.com/2023/12/14/SOLID%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/
 http://example.com/2023/12/13/inline/
 http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/
 http://example.com/2023/12/13/HyprlandQQ/
@@ -15,6 +18,12 @@ http://example.com/tags/inline/
 http://example.com/tags/ODR/
 http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/
 http://example.com/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/
+http://example.com/tags/visit/
+http://example.com/tags/SOLID/
+http://example.com/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/
+http://example.com/tags/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/
+http://example.com/tags/observer/
+http://example.com/tags/visitor/
 http://example.com/categories/linux/
 http://example.com/categories/linux/linuxqq/
 http://example.com/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/
