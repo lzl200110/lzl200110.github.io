@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="任何一个 C++ 类,总会面临六大特殊函数的问题:  default 构造 copy 构造 move 构造 copy 赋值 move 赋值 析构  这六大金刚,一般可以分为4类：  默认构造 copy 家族: copy 构造&#x2F;赋值 move 家族: move 构造&#x2F;赋值 析构  本文将结合存在性来讲解他们之间的关系，并补充一些常见的观点。我们在编写类时，应考虑如下规则：The">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六大金刚">
+<meta property="og:url" content="http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="任何一个 C++ 类,总会面临六大特殊函数的问题:  default 构造 copy 构造 move 构造 copy 赋值 move 赋值 析构  这六大金刚,一般可以分为4类：  默认构造 copy 家族: copy 构造&#x2F;赋值 move 家族: move 构造&#x2F;赋值 析构  本文将结合存在性来讲解他们之间的关系，并补充一些常见的观点。我们在编写类时，应考虑如下规则：The">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-12-16T08:40:44.000Z">
+<meta property="article:modified_time" content="2023-12-17T09:11:41.874Z">
+<meta property="article:author" content="Yuinhai">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="六大金刚">
+<meta property="article:tag" content="构造函数">
+<meta property="article:tag" content="析构函数">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>六大金刚</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/12/15/Observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&text=六大金刚"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&is_video=false&description=六大金刚"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=六大金刚&body=Check out this article: http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&name=六大金刚&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&t=六大金刚"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">存在性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0"><span class="toc-number">1.1.</span> <span class="toc-text">默认构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0-%E6%8B%B7%E8%B4%9D%E8%B5%8B%E5%80%BC"><span class="toc-number">1.2.</span> <span class="toc-text">拷贝构造(拷贝赋值)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0-%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC"><span class="toc-number">1.3.</span> <span class="toc-text">移动构造(移动赋值)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%90%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">析构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E7%94%A8%E8%A7%84%E5%88%99"><span class="toc-number">1.5.</span> <span class="toc-text">共用规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E8%A7%82%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">常见的观点</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        六大金刚
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Yuinhai</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-16T08:40:44.000Z" class="dt-published" itemprop="datePublished">2023-12-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/c/">c++</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/c/" rel="tag">c++</a>, <a class="p-category" href="/tags/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/" rel="tag">六大金刚</a>, <a class="p-category" href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" rel="tag">构造函数</a>, <a class="p-category" href="/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" rel="tag">析构函数</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>任何一个 C++ 类,总会面临六大特殊函数的问题:</p>
+<ul>
+<li><strong>default 构造</strong></li>
+<li><strong>copy 构造</strong></li>
+<li><strong>move 构造</strong></li>
+<li><strong>copy 赋值</strong></li>
+<li><strong>move 赋值</strong></li>
+<li><strong>析构</strong></li>
+</ul>
+<p>这六大金刚,一般可以分为4类：</p>
+<ul>
+<li>默认构造</li>
+<li>copy 家族: copy 构造&#x2F;赋值</li>
+<li>move 家族: move 构造&#x2F;赋值</li>
+<li>析构</li>
+</ul>
+<p>本文将结合<em>存在性</em>来讲解他们之间的关系，并补充一些常见的观点。<br>我们在编写类时，应考虑如下规则：<strong>The Rule Of All or Nothing</strong> 。对于 <em>copy&#x2F;move 家族函数</em> 和 <em>析构函数</em>,要么全靠编译器默认生成,要么一旦对一个类考虑了其中一个,就应该同时考虑其它四个。要么<strong>全靠编译器实现，要么全部自己实现</strong>。</p>
+<h2 id="存在性"><a href="#存在性" class="headerlink" title="存在性"></a>存在性</h2><p>所谓 <strong>存在性</strong>,单纯指在一个类中,它的定义是否存在,无论是用户自己定义的还是系统默认生成的。<br>对于任何一个特殊函数,其声明&#x2F;定义首先分为两大类别:</p>
+<ol>
+<li>用户显式声明&#x2F;定义<br>• 用户自定义<br>• 显式声明&#x2F;定义为 default<br>• 显式声明为 delete</li>
+<li>编译器隐式声明&#x2F;定义<br>• 隐式声明&#x2F;定义为 default<br>• 隐式声明为 delete</li>
+</ol>
+<p>在用户显式定义的情况下, 对于任何一个特殊函数:</p>
+<ol>
+<li>如果用户显式定义了它(包括 &#x3D;default ),它都明确地存在。</li>
+<li>如果用户显式删除了它 ( 通过 &#x3D;delete ),它都明确地不再存在。</li>
+</ol>
+<p>如果用户没有显式定义,编译器根据规则,决定隐式的定义或删除它。</p>
+<h3 id="默认构造"><a href="#默认构造" class="headerlink" title="默认构造"></a>默认构造</h3><p><strong>只要用户 <span style="color: #7feee5;">显式声明</span>了构造函数(包括 copy&#x2F;move 构造,以及其他构造),系统就不会隐式定义默认构造。</strong><br>注意,<strong>用户显式声明</strong>并不是指用户自定义: 用户可以明确地声明 &#x3D; default 或者  &#x3D; delete ,但这些都不会生成默认构，当存在用户声明的构造函数时，用户仍可以通过关键词defaulth强制编译器生成默认构造函数。 </p>
+<p>如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Thing</span> &#123;</span><br><span class="line">    <span class="built_in">Thing</span>(Thing&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thing t&#123;&#125;; <span class="comment">// Error[No matching constructor for initialization of &#x27;Thing&#x27;]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们声明了<code>Thing</code>的移动构造函数(即使是用&#x3D;default)，编译器依旧不会生成默认构造函数。</p>
+<h3 id="拷贝构造-拷贝赋值"><a href="#拷贝构造-拷贝赋值" class="headerlink" title="拷贝构造(拷贝赋值)"></a>拷贝构造(拷贝赋值)</h3><p>• 如果<strong>用户没有显式声明任何构造函数列表</strong>,编译器会生成默认拷贝构造函数。<br>• 如果用户显式声明了构造函数列表,如果<strong>没有声明move家族</strong>，编译器也会生成一个默认拷贝构造函数。<br>• 拷贝赋值与拷贝构造情况相同；<br>如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Thing</span> &#123;</span><br><span class="line"><span class="built_in">Thing</span>() &#123;&#125;</span><br><span class="line"><span class="comment">// 隐 式 生 成  copy构造 和 copy 赋值</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;) = default;</span></span><br><span class="line"><span class="comment">// Thing&amp; operator=(Thing const&amp;) = default;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Thing</span> &#123;</span><br><span class="line"><span class="built_in">Thing</span>(Thing&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// copy 构造 和 copy 赋值 被 删 除</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;) = delete;</span></span><br><span class="line"><span class="comment">// Thing&amp; operator=(Thing const&amp;) = delete;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Thing</span> &#123;</span><br><span class="line">Thing &amp; <span class="keyword">operator</span>=(Thing&amp;&amp;) =<span class="keyword">default</span></span><br><span class="line"><span class="comment">// copy 构造 和 copy 赋值 被 删 除</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;) = delete;</span></span><br><span class="line"><span class="comment">// Thing&amp; operator=(Thing const&amp;) = delete;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><span style="color: #de7f7f;"><em>注解: 隐式生成的拷贝构造,会依次调用所有父类和非静态成员的 copy 构造。</em></span></p>
+<h3 id="移动构造-移动赋值"><a href="#移动构造-移动赋值" class="headerlink" title="移动构造(移动赋值)"></a>移动构造(移动赋值)</h3><p>如果用户明确声明了如下任何一个,系统都不会自动生成 移动构造:<br>• copy 构造<br>• copy 赋值<br>• move 赋值<br>• 析构函数<br>移动赋值和移动构造情况相同(<em>移动赋值、移动构造之间声明一个，编译器就会删除另外一个。如果你自己定义了一个，说明系统默认的与你想要的不符，这样的话，另外一个一般也不符，因此编译器选择删除</em>)。<br>如：</p>
+<figure class="highlight c"><figcaption><span>p p</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Thing</span> &#123;</span></span><br><span class="line">Thing() &#123;&#125;</span><br><span class="line"><span class="comment">// 隐 式 生 成 move 构造 和 move 赋值</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;&amp;) = default;</span></span><br><span class="line"><span class="comment">// Thing&amp; operator=(Thing const&amp;&amp;) = default;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Thing</span> &#123;</span></span><br><span class="line">～Thing() = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// move 构造 和 move 赋值 被 删 除</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;&amp;) = delete;</span></span><br><span class="line"><span class="comment">// Thing&amp; operator=(Thing const&amp;&amp;) = delete;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Thing</span> &#123;</span></span><br><span class="line">Thing &amp; operator=(Thing&amp;&amp;) =<span class="keyword">default</span></span><br><span class="line"><span class="comment">// move 构造 和 删 除</span></span><br><span class="line"><span class="comment">// Thing(Thing const&amp;&amp;) = delete;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><span style="color: #de7f7f;"><em><strong>注解</strong>: 隐式生成的 move 构造,会依次调用所有父类和非静态成员的 move 构造。</em></span></p>
+<p>这里再次重申：<br>对于<strong>move&#x2F;copy 家族</strong> ,编译器奉行的是 <strong>nothing or all</strong> 的策略:要么完全由编译器自动生成,要么完全由用户自己决定。</p>
+<h3 id="析构"><a href="#析构" class="headerlink" title="析构"></a>析构</h3><p><strong>析构</strong> 在 <strong>六大金刚</strong> 中,处于食物链的顶端: 它只可能影响别人的存在性,而其它五位的存在性对其毫无影响。  </p>
+<ul>
+<li>一旦用户明确自定义了 <strong>析构</strong> ,则 <strong>move 家族</strong>就丧失了被编译器隐式生成的权利,除非程序员显式声明,否则,move 家族的两个成员都被标记为删除。</li>
+<li><strong>析构</strong> 对于 <strong>copy 家族</strong>与 <strong>默认构造</strong>的存在性没有影响,析构被明确标记为删除，因为只创建不删除的对象,通过拷贝构造,或者通过拷贝复制进行修改,从语义和操作上并无问题。</li>
+</ul>
+<p>事实上,这背后的逻辑非常简单:<br>move 的典型应用场景为:将 <strong>将亡值</strong> 的内容移动给另外一个对象之后,自身很快就会被销毁,因而 move 操作与析构行为是高度相关的。  如果 析构是自定义的,那么 move 也应该由程序员自定义;编译器自作主张的默认生成是不负责任的。  而如果析构函数被程序员明确声明为删除,move却继续存在,这很明显违背了 move 本身的意义。</p>
+<p><span style="color: #de7f7f;">*<strong>注解</strong>: 对于用户定义或隐式定义的析构函数，在析构函数体执行后，编译器会以声明的逆序调用该类的<strong>所有非静态非变体数据成员的析构函数</strong>，然后以构造的逆序调用所有直接<strong>非虚基类的析构函数</strong>（继而调用它的成员与它的基类的析构函数，以此类推），最后，如果此对象类型是最终派生类，那么调用所有虚基类的析构函数。</span></p>
+<h3 id="共用规则"><a href="#共用规则" class="headerlink" title="共用规则"></a>共用规则</h3><p>前面已经介绍了特殊函数的存在性，但依旧存在一些问题,当编译器决定隐式定义某个特殊函数(&#x3D;defalt),但此时：比如,其某个<strong>非静态成员变量,或者某个父类将那个特殊函数删除了,或者访问被禁止了,则系统也会放弃对此特殊函数的生成,而隐式的将其声明为 delete</strong>，这类情况属于<strong>共用规则</strong>。</p>
+<h2 id="常见的观点"><a href="#常见的观点" class="headerlink" title="常见的观点"></a>常见的观点</h2><ol>
+<li>单参的构造函数应该声明为<strong>explicit</strong>，可以避免某些隐式转换或者二意性错误。</li>
+<li>将析构函数声明为 &#x3D;delete 可以让对象只能分配到堆上。</li>
+<li>不要在构造函数和析构函数中调用虚函数。出于保护机制，会得到非虚的调用。</li>
+<li>在六大金刚之外，为类型实现<strong>swap</strong>和**operator&#x3D;&#x3D;**操作。</li>
+<li>基类析构函数应该是public且virtual,要么是protected且非virtual。</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">存在性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0"><span class="toc-number">1.1.</span> <span class="toc-text">默认构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0-%E6%8B%B7%E8%B4%9D%E8%B5%8B%E5%80%BC"><span class="toc-number">1.2.</span> <span class="toc-text">拷贝构造(拷贝赋值)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0-%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC"><span class="toc-number">1.3.</span> <span class="toc-text">移动构造(移动赋值)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%90%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">析构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E7%94%A8%E8%A7%84%E5%88%99"><span class="toc-number">1.5.</span> <span class="toc-text">共用规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E8%A7%82%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">常见的观点</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&text=六大金刚"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&is_video=false&description=六大金刚"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=六大金刚&body=Check out this article: http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&title=六大金刚"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&name=六大金刚&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/&t=六大金刚"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    Yuinhai
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
