@@ -3,11 +3,11 @@
   <title>Hexo</title>
   
   
-  <link href="https://github.com/lzl200110/lzl200110.github.io/atom.xml" rel="self"/>
+  <link href="http://example.com/atom.xml" rel="self"/>
   
-  <link href="https://github.com/lzl200110/lzl200110.github.io/"/>
+  <link href="http://example.com/"/>
   <updated>2024-01-01T08:19:44.662Z</updated>
-  <id>https://github.com/lzl200110/lzl200110.github.io/</id>
+  <id>http://example.com/</id>
   
   <author>
     <name>Yuinhai</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>C++中的SIMD支持</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/31/SIMD/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/31/SIMD/</id>
+    <link href="http://example.com/2023/12/31/SIMD/"/>
+    <id>http://example.com/2023/12/31/SIMD/</id>
     <published>2023-12-31T03:11:55.000Z</published>
     <updated>2024-01-01T08:19:44.662Z</updated>
     
@@ -33,21 +33,21 @@
     
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/c/"/>
+    <category term="c++" scheme="http://example.com/categories/c/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="SIMD" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/SIMD/"/>
+    <category term="SIMD" scheme="http://example.com/tags/SIMD/"/>
     
-    <category term="stdx" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/stdx/"/>
+    <category term="stdx" scheme="http://example.com/tags/stdx/"/>
     
   </entry>
   
   <entry>
     <title>Single单例模式</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</id>
+    <link href="http://example.com/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</id>
     <published>2023-12-17T15:23:05.000Z</published>
     <updated>2023-12-18T03:33:13.199Z</updated>
     
@@ -62,23 +62,23 @@
     
     
     
-    <category term="design pattern" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/design-pattern/"/>
+    <category term="design pattern" scheme="http://example.com/categories/design-pattern/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="设计模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="单例模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <category term="单例模式" scheme="http://example.com/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="Single" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/Single/"/>
+    <category term="Single" scheme="http://example.com/tags/Single/"/>
     
   </entry>
   
   <entry>
     <title>六大金刚</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/</id>
+    <link href="http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"/>
+    <id>http://example.com/2023/12/16/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/</id>
     <published>2023-12-16T08:40:44.000Z</published>
     <updated>2023-12-17T09:11:41.874Z</updated>
     
@@ -96,23 +96,23 @@
     
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/c/"/>
+    <category term="c++" scheme="http://example.com/categories/c/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="六大金刚" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"/>
+    <category term="六大金刚" scheme="http://example.com/tags/%E5%85%AD%E5%A4%A7%E9%87%91%E5%88%9A/"/>
     
-    <category term="构造函数" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/"/>
+    <category term="构造函数" scheme="http://example.com/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/"/>
     
-    <category term="析构函数" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/"/>
+    <category term="析构函数" scheme="http://example.com/tags/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/"/>
     
   </entry>
   
   <entry>
     <title>Observer 观察者模式</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/15/Observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/15/Observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
+    <link href="http://example.com/2023/12/15/Observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2023/12/15/Observer%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
     <published>2023-12-15T02:31:47.000Z</published>
     <updated>2023-12-15T08:10:30.121Z</updated>
     
@@ -126,23 +126,23 @@
     
     
     
-    <category term="design pattern" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/design-pattern/"/>
+    <category term="design pattern" scheme="http://example.com/categories/design-pattern/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="设计模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="观察者模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <category term="观察者模式" scheme="http://example.com/tags/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="Observer" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/Observer/"/>
+    <category term="Observer" scheme="http://example.com/tags/Observer/"/>
     
   </entry>
   
   <entry>
     <title>Builder 建造者模式</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/14/Builder%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/14/Builder%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E6%A8%A1%E5%BC%8F/</id>
+    <link href="http://example.com/2023/12/14/Builder%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2023/12/14/Builder%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E6%A8%A1%E5%BC%8F/</id>
     <published>2023-12-14T08:40:17.000Z</published>
     <updated>2023-12-16T08:13:41.165Z</updated>
     
@@ -156,23 +156,23 @@
     
     
     
-    <category term="design pattern" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/design-pattern/"/>
+    <category term="design pattern" scheme="http://example.com/categories/design-pattern/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="设计模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="访问者模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <category term="访问者模式" scheme="http://example.com/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="Builder" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/Builder/"/>
+    <category term="Builder" scheme="http://example.com/tags/Builder/"/>
     
   </entry>
   
   <entry>
     <title>SOLID设计原则</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/14/SOLID%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/14/SOLID%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</id>
+    <link href="http://example.com/2023/12/14/SOLID%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
+    <id>http://example.com/2023/12/14/SOLID%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</id>
     <published>2023-12-14T03:43:36.000Z</published>
     <updated>2023-12-14T05:42:22.377Z</updated>
     
@@ -186,21 +186,21 @@
     
     
     
-    <category term="design pattern" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/design-pattern/"/>
+    <category term="design pattern" scheme="http://example.com/categories/design-pattern/"/>
     
     
-    <category term="设计模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="SOLID" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/SOLID/"/>
+    <category term="SOLID" scheme="http://example.com/tags/SOLID/"/>
     
-    <category term="设计原则" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
+    <category term="设计原则" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
     
   </entry>
   
   <entry>
     <title>Visitor 访问者模式</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
+    <link href="http://example.com/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
     <published>2023-12-13T16:55:14.000Z</published>
     <updated>2023-12-15T08:10:27.834Z</updated>
     
@@ -214,23 +214,23 @@
     
     
     
-    <category term="design pattern" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/design-pattern/"/>
+    <category term="design pattern" scheme="http://example.com/categories/design-pattern/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="设计模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="http://example.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="访问者模式" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <category term="访问者模式" scheme="http://example.com/tags/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
     
-    <category term="Visitor" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/Visitor/"/>
+    <category term="Visitor" scheme="http://example.com/tags/Visitor/"/>
     
   </entry>
   
   <entry>
     <title>浅析C++中的inline关键字</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/13/inline/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/13/inline/</id>
+    <link href="http://example.com/2023/12/13/inline/"/>
+    <id>http://example.com/2023/12/13/inline/</id>
     <published>2023-12-13T11:49:21.000Z</published>
     <updated>2023-12-13T13:13:36.956Z</updated>
     
@@ -244,21 +244,21 @@
     
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/c/"/>
+    <category term="c++" scheme="http://example.com/categories/c/"/>
     
     
-    <category term="c++" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/c/"/>
+    <category term="c++" scheme="http://example.com/tags/c/"/>
     
-    <category term="inline" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/inline/"/>
+    <category term="inline" scheme="http://example.com/tags/inline/"/>
     
-    <category term="ODR" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/ODR/"/>
+    <category term="ODR" scheme="http://example.com/tags/ODR/"/>
     
   </entry>
   
   <entry>
     <title>linux wayland 腾讯会议 无法共享屏幕解决方案</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/</id>
+    <link href="http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/"/>
+    <id>http://example.com/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/</id>
     <published>2023-12-13T11:06:25.000Z</published>
     <updated>2023-12-13T11:40:33.836Z</updated>
     
@@ -272,23 +272,23 @@
     
     
     
-    <category term="linux" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/"/>
+    <category term="linux" scheme="http://example.com/categories/linux/"/>
     
-    <category term="wemeebin" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/wemeebin/"/>
+    <category term="wemeebin" scheme="http://example.com/categories/linux/wemeebin/"/>
     
     
-    <category term="linux" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/linux/"/>
+    <category term="linux" scheme="http://example.com/tags/linux/"/>
     
-    <category term="wayland" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/wayland/"/>
+    <category term="wayland" scheme="http://example.com/tags/wayland/"/>
     
-    <category term="wemeebin" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/wemeebin/"/>
+    <category term="wemeebin" scheme="http://example.com/tags/wemeebin/"/>
     
   </entry>
   
   <entry>
     <title>Hyprland QQ 关闭后无法打开GUI窗口解决方案</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/13/HyprlandQQ/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/13/HyprlandQQ/</id>
+    <link href="http://example.com/2023/12/13/HyprlandQQ/"/>
+    <id>http://example.com/2023/12/13/HyprlandQQ/</id>
     <published>2023-12-13T10:00:55.000Z</published>
     <updated>2023-12-13T11:40:28.950Z</updated>
     
@@ -303,21 +303,21 @@
     
     
     
-    <category term="linux" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/"/>
+    <category term="linux" scheme="http://example.com/categories/linux/"/>
     
-    <category term="linuxqq" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/linuxqq/"/>
+    <category term="linuxqq" scheme="http://example.com/categories/linux/linuxqq/"/>
     
     
-    <category term="hyprland" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/hyprland/"/>
+    <category term="hyprland" scheme="http://example.com/tags/hyprland/"/>
     
-    <category term="linuxqq" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/linuxqq/"/>
+    <category term="linuxqq" scheme="http://example.com/tags/linuxqq/"/>
     
   </entry>
   
   <entry>
     <title>linux Kokomi(珊瑚宫心海)光标主题</title>
-    <link href="https://github.com/lzl200110/lzl200110.github.io/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
-    <id>https://github.com/lzl200110/lzl200110.github.io/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/</id>
+    <link href="http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
+    <id>http://example.com/2023/12/13/Kokomi%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/</id>
     <published>2023-12-13T09:37:38.000Z</published>
     <updated>2023-12-13T11:40:23.763Z</updated>
     
@@ -331,14 +331,14 @@
     
     
     
-    <category term="linux" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/"/>
+    <category term="linux" scheme="http://example.com/categories/linux/"/>
     
-    <category term="光标主题" scheme="https://github.com/lzl200110/lzl200110.github.io/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
+    <category term="光标主题" scheme="http://example.com/categories/linux/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
     
     
-    <category term="linux" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/linux/"/>
+    <category term="linux" scheme="http://example.com/tags/linux/"/>
     
-    <category term="光标主题" scheme="https://github.com/lzl200110/lzl200110.github.io/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
+    <category term="光标主题" scheme="http://example.com/tags/%E5%85%89%E6%A0%87%E4%B8%BB%E9%A2%98/"/>
     
   </entry>
   
