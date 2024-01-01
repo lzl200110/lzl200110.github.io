@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="序SIMD 的全称是 Single Instruction Multiple Data，中文名“单指令多数据”。一个SIMD变量可以存储**W&lt;sub&gt;T&lt;&#x2F;sub&gt;** 个变量，一次SIMD指令可以操作多个数据同时进行计算(WT取决于数据的类型T的大小和SIMD指令集类型)。本文将简单介绍X86上的SIMD内嵌原语，并介绍C++标准库提供的simd泛型，之后结合实例讲解S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++中的SIMD支持">
+<meta property="og:url" content="http://example.com/2023/12/31/SIMD/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="序SIMD 的全称是 Single Instruction Multiple Data，中文名“单指令多数据”。一个SIMD变量可以存储**W&lt;sub&gt;T&lt;&#x2F;sub&gt;** 个变量，一次SIMD指令可以操作多个数据同时进行计算(WT取决于数据的类型T的大小和SIMD指令集类型)。本文将简单介绍X86上的SIMD内嵌原语，并介绍C++标准库提供的simd泛型，之后结合实例讲解S">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/img/simd_intro.png">
+<meta property="og:image" content="http://example.com/img/basic_simd.png">
+<meta property="og:image" content="http://example.com/img/simd_constuctor.png">
+<meta property="og:image" content="http://example.com/img/non_invasive_simd.png">
+<meta property="og:image" content="http://example.com/img/simd_pall.png">
+<meta property="article:published_time" content="2023-12-31T03:11:55.000Z">
+<meta property="article:modified_time" content="2024-01-01T08:17:05.705Z">
+<meta property="article:author" content="Yuinhai">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="SIMD">
+<meta property="article:tag" content="stdx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/simd_intro.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>C++中的SIMD支持</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/12/17/Single%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/31/SIMD/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/31/SIMD/&text=C++中的SIMD支持"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/31/SIMD/&is_video=false&description=C++中的SIMD支持"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C++中的SIMD支持&body=Check out this article: http://example.com/2023/12/31/SIMD/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/31/SIMD/&name=C++中的SIMD支持&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/31/SIMD/&t=C++中的SIMD支持"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F"><span class="toc-number">1.</span> <span class="toc-text">序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SIMD%E5%86%85%E5%B5%8C%E5%8E%9F%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">SIMD内嵌原语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STL%E4%B8%AD%E7%9A%84SIMD"><span class="toc-number">3.</span> <span class="toc-text">STL中的SIMD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SIMD-%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text">SIMD 类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SIMD-%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">SIMD 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load-store"><span class="toc-number">3.4.</span> <span class="toc-text">load &amp; store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE"><span class="toc-number">3.5.</span> <span class="toc-text">访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="toc-number">3.6.</span> <span class="toc-text">算术运算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E7%BA%A6%E5%87%BD%E6%95%B0-reduce%E3%80%81hmin%E3%80%81hmax"><span class="toc-number">3.7.</span> <span class="toc-text">规约函数 reduce、hmin、hmax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-number">3.8.</span> <span class="toc-text">数学函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">矩阵乘法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86"><span class="toc-number">4.2.</span> <span class="toc-text">图像处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.1.</span> <span class="toc-text">简单实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84SIMD%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.2.</span> <span class="toc-text">错误的SIMD优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84SIMD%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.3.</span> <span class="toc-text">正确的SIMD优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94"><span class="toc-number">4.2.4.</span> <span class="toc-text">效率对比</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        C++中的SIMD支持
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Yuinhai</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-31T03:11:55.000Z" class="dt-published" itemprop="datePublished">2023-12-31</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/c/">c++</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/SIMD/" rel="tag">SIMD</a>, <a class="p-category" href="/tags/c/" rel="tag">c++</a>, <a class="p-category" href="/tags/stdx/" rel="tag">stdx</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>SIMD 的全称是 Single Instruction Multiple Data，中文名“单指令多数据”。<code>一个SIMD变量可以存储**W&lt;sub&gt;T&lt;/sub&gt;** 个变量</code>，<code>一次SIMD指令可以操作多个数据同时进行计算</code>(W<sub>T</sub>取决于数据的类型T的大小和SIMD指令集类型)。<br><img src="/../img/simd_intro.png" alt="simd"><br>本文将简单介绍X86上的SIMD内嵌原语，并介绍C++标准库提供的simd泛型，之后结合实例讲解SIMD的使用。</p>
+<h2 id="SIMD内嵌原语"><a href="#SIMD内嵌原语" class="headerlink" title="SIMD内嵌原语"></a>SIMD内嵌原语</h2><p>x86系统提供了128位的<strong>SSE</strong>、256位的<strong>AVX2</strong>、512位的<strong>AVX512</strong>指令集，分别对应XMM、YMM、ZMM寄存器，linux系统可以通过<strong>lscpu</strong>指令查看支持的指令集。<br>x86SIMD的内嵌原语扩展了C语言的数据类型，定义为：<code>__m&lt;位数&gt;&lt;类型&gt;</code>，并提供了操作<code>\_&lt;mm/mm256/mm512&gt;\_&lt;操作类型&gt;_&lt;数据类型&gt;</code>,如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">__m128 m1 = _mm_set_ps(<span class="number">1.0f</span>, <span class="number">2.0f</span>, <span class="number">3.0f</span>, <span class="number">4.0f</span>); <span class="comment">// 4个float</span></span><br><span class="line">__m128 m2 = _mm_add_ps(m1, m1);                 <span class="comment">// m1进行向量相加得到m2</span></span><br><span class="line"><span class="type">int</span> *p1 = (<span class="type">int</span> *)<span class="keyword">operator</span> <span class="keyword">new</span>[](<span class="number">8</span> * <span class="built_in">sizeof</span>(<span class="type">int</span>), std::<span class="built_in">align_val_t</span>(<span class="number">256</span>));</span><br><span class="line">__m256i m3 = _mm256_load_epi32(p1);             <span class="comment">// 读取p1地址中的8个int到m3</span></span><br><span class="line"><span class="keyword">delete</span>[] p1;</span><br></pre></td></tr></table></figure>
+<p>C语言扩展的SIMD内嵌原语提供了大量操作SIMD的函数，具体可参见<a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html">Intel手册</a>。</p>
+<p><em>注: 使用avx2指令时需要添加编译参数-mavx2,使用avx512指令时需要添加编译参数-mavx512f。SSE函数在头文件&lt;nmmintrin.h&gt;中，AVX函数在头文件&lt;immintrin.h&gt;中</em></p>
+<h2 id="STL中的SIMD"><a href="#STL中的SIMD" class="headerlink" title="STL中的SIMD"></a>STL中的SIMD</h2><p>C++在SIMD的基础上提供了支持泛型的SIMD类simd,将复杂的SIMD函数变为简单的操作符重载等，标准库提供的SIMD在<code>&lt;experimental/simd&gt;</code>下。</p>
+<h3 id="SIMD-类型"><a href="#SIMD-类型" class="headerlink" title="SIMD 类型"></a>SIMD 类型</h3><p><img src="/../img/basic_simd.png" alt="basic_simd"><br>标准库提供了<strong>simd</strong> <strong>、native_simd</strong> 和 <strong>fixed_size_simd</strong> 3种SIMD类型(后两个是simd在Abi上的特化)，<code>simd&lt;T&gt;</code> 和 <code>native_simd&lt;T&gt;</code> 类型的宽度在编译时由实现决定，相反，<code>fixed_size_simd&lt;T, N&gt;</code> 类型的宽度是由开发者决定的一个特定的固定的值。<code>simd</code>使用的是128位的xmm寄存器，<code>native_simd</code>则是根据编译参数<code>-mavx2、-mavx512f</code>等来决定寄存器宽度。</p>
+<p>simd类型提供了size方法来返回其包含的元素个数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;experimental/simd&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> stdx = std::experimental;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    stdx::simd&lt;<span class="type">float</span>&gt;                s1&#123;&#125;;</span><br><span class="line">    stdx::native_simd&lt;<span class="type">float</span>&gt;         s2&#123;&#125;;</span><br><span class="line">    stdx::fixed_size_simd&lt;<span class="type">float</span>, <span class="number">6</span>&gt;  s3&#123;&#125;;</span><br><span class="line">    std::cout &lt;&lt; s1.<span class="built_in">size</span>() &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; s2.<span class="built_in">size</span>() &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; s3.<span class="built_in">size</span>() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>g++ main.cpp -o main &amp;&amp; ./main</code>编译并运行，结果为<code>4 4 6</code>,说明 simd 和 native_simd 都使用SSE指令集。</p>
+<p>添加编译参数-mavx2 ，<code>g++ main.cpp -o main -maxv2 &amp;&amp; ./main</code>，结果为<code>4 8 6</code>,此时native_simd使用AVX2指令集。</p>
+<ul>
+<li><strong>simd<T></strong> 提供了与T相同的操作函数(+&#x3D;,&#x3D;&#x3D;,&lt;&lt; 等一系列操作)</li>
+<li><strong>simd<T></strong> 对类型T的要求为<strong>算术类型</strong>(int,float等基本类型)，除了bool和long double 类型</li>
+<li><strong>simd_mask<T></strong> 提供了bool的SIMD,表现为<em>掩码</em>，宽度为simd::size。</li>
+<li><strong>Abi</strong>决定simd的宽度，如<code>simd&lt;int,16&gt;</code> 可以使用一个zmm寄存器或者两个ymm寄存器或者4个xmm寄存器。</li>
+</ul>
+<p><em>注:simd<T>的表现与T相同，区别在与多个数据可以一起计算。由于SIMD提供了一系列的算术操作符重载，因此需要约定T为算术类型。simd_mask提供了SIMD的掩码，可以在选择SIMD数据时发挥作用，对于超出寄存器返回的SIMD如fixed_size_simd&lt;int,64&gt;,Abi可以通过存储到2个zmm的方法实现，这样外部就不需要关注simd布局上的实现。通过stdx::simd,可以避免记录SIMD提供的内嵌原语函数，而是n简答调用函数重载，同时更便于写出平台无关的simdh程序。</em></p>
+<h3 id="SIMD-函数"><a href="#SIMD-函数" class="headerlink" title="SIMD 函数"></a>SIMD 函数</h3><p>上文提到了标准库提供的simd类型，本届介绍在simd类型上的方法。</p>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><p>不考虑特殊函数(默认、移动、拷贝构造)，simd 提供了如下构造函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> U &gt;</span></span><br><span class="line"><span class="function"><span class="title">simd</span><span class="params">( U&amp;&amp; value )</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> G &gt;</span></span><br><span class="line"><span class="function"><span class="keyword">explicit</span> <span class="title">simd</span><span class="params">( G&amp;&amp; generator )</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> U, <span class="keyword">class</span> Flags &gt;</span></span><br><span class="line"><span class="function"><span class="title">simd</span><span class="params">( <span class="type">const</span> U* mem, Flags flags )</span></span>;</span><br></pre></td></tr></table></figure>
+<p><img src="/../img/simd_constuctor.png" alt="构造函数"><br>作用分别是：</p>
+<ul>
+<li><code>广播构造</code>函数构造一个 simd，所有值均以 value 初始化。</li>
+<li><code>生成器构造</code>函数构造一个 simd，其第 i 个元素以 generator(std::integral_constant&lt;std::size_t, i&gt;()) 初始化。</li>
+<li><code>加载构造</code>函数构造 simd，使得对于范围 <code>[​0​, size())</code> 中的所有 i，其第 i 个元素以 static_cast<T>(mem[i]) 初始化。</li>
+</ul>
+<p>最后一个Flags 表示mem的对齐方式，标准库提供了3种对其方式，分别是：</p>
+<ul>
+<li><strong>element_aligned</strong>    指示mem对齐到元素</li>
+<li><strong>vector_aligned</strong>     指示mem对齐到memory_alignment_v&lt;T, U&gt;，T为simd类型，U为mem缓冲区类型(可以理解为对齐到SIMD寄存器)。</li>
+<li><strong>overaligned</strong>        指示mem对齐到N</li>
+</ul>
+<p>实例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;experimental/simd&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> stdx = std::experimental;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    stdx::native_simd&lt;<span class="type">int</span>&gt; a;<span class="comment">// 未初始化</span></span><br><span class="line">    a = <span class="number">1</span>;<span class="comment">// 将所有元素设为 1</span></span><br><span class="line">    <span class="function">stdx::native_simd&lt;<span class="type">int</span>&gt;  <span class="title">b</span><span class="params">([](<span class="type">int</span> i) &#123; <span class="keyword">return</span> i; &#125;)</span></span>; <span class="comment">// &#123;0, 1, 2, 3, ...&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">alignas</span>(stdx::memory_alignment_v&lt;stdx::native_simd&lt;<span class="type">int</span>&gt;&gt;) std::array&lt;<span class="type">int</span>, stdx::native_simd&lt;<span class="type">int</span>&gt;::<span class="built_in">size</span>() +<span class="number">1</span>&gt; mem = &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; mem.<span class="built_in">size</span>(); ++i)</span><br><span class="line">        mem[i] = i &amp; <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">stdx::native_simd&lt;<span class="type">int</span>&gt; <span class="title">c</span><span class="params">(&amp;mem[<span class="number">0</span>], stdx::vector_aligned)</span></span>;  <span class="comment">// &#123;0, 1, 0, 1, ...&#125;</span></span><br><span class="line">    <span class="function">stdx::native_simd&lt;<span class="type">int</span>&gt; <span class="title">d</span><span class="params">(&amp;mem[<span class="number">1</span>], stdx::element_aligned)</span></span>; <span class="comment">// &#123;1, 0, 1, 0, ...&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> sum = a + b + c + d;</span><br><span class="line">    <span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; sum.<span class="built_in">size</span>(); ++i)</span><br><span class="line">        std::cout &lt;&lt; sum[i] &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 可能结果(AVX2 下)</span></span><br><span class="line"><span class="comment">// 2 3 4 5 6 7 8 9 </span></span><br></pre></td></tr></table></figure>
+<p>上述代码中mem是长度为<code>stdx::native_simd&lt;int&gt;::size() +1</code> 的array，并且向量对齐到<code>stdx::native_simd&lt;int&gt;</code>(SSE对齐到 16Bytes,AVX2对其到 32Bytes,AVX512对其到64 Bytes)。</p>
+<h3 id="load-store"><a href="#load-store" class="headerlink" title="load &amp; store"></a>load &amp; store</h3><p>simd提供了 <strong>copy_from</strong> 和 <strong>copy_to</strong> 来从<code>连续内存</code>加载或存储simd的元素，函数签名如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> U, <span class="keyword">class</span> Flags &gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">copy_from</span><span class="params">( <span class="type">const</span> U* mem, Flags flags )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> U, <span class="keyword">class</span> Flags &gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">copy_to</span><span class="params">( <span class="type">const</span> U* mem, Flags flags )</span></span>;</span><br></pre></td></tr></table></figure>
+<p>上述函数表示 load 或者 store 到<code>[mem, mem + size()）</code></p>
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>在构造函数函数中描述过，方法为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stdx::simd&lt;<span class="type">int</span>&gt; a;</span><br><span class="line"><span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; sum.<span class="built_in">size</span>(); ++i)</span><br><span class="line">    std::cout &lt;&lt; sum[i] &lt;&lt; <span class="string">&#x27; </span></span><br></pre></td></tr></table></figure>
+<h3 id="算术运算"><a href="#算术运算" class="headerlink" title="算术运算"></a>算术运算</h3><p>simd 提供了一系列算术运算，本质上为多个T同时运行，方法有：</p>
+<ul>
+<li>逐元素自增和自减<br>operator++ operator–</li>
+<li>逐元素一元运算符<br>operator! operator~ operator+(取正) operator-(取负)</li>
+<li>逐元素二元运算符<br>operator+ operator- operator* operator&#x2F; operator% operator&amp; operator| operator^ operator&lt;&lt; operator&gt;&gt;</li>
+<li>逐元素复合二元运算符<br>operator+&#x3D; operator-&#x3D; operator*&#x3D; operator&#x2F;&#x3D; operator%&#x3D; operator&amp;&#x3D; operator|&#x3D; operator^&#x3D; operator&lt;&lt;&#x3D; operator&gt;&gt;&#x3D;</li>
+<li>逐元素关系运算符<br>operator&#x3D;&#x3D; operator!&#x3D; operator&gt;&#x3D; operator&lt;&#x3D; operator&gt; operator&lt;</li>
+</ul>
+<p><em>注，算术运算返回一个simd对象(逐元素关系运算符返回simd_mask)</em></p>
+<h3 id="规约函数-reduce、hmin、hmax"><a href="#规约函数-reduce、hmin、hmax" class="headerlink" title="规约函数 reduce、hmin、hmax"></a>规约函数 reduce、hmin、hmax</h3><p>标准库提供了规约函数来讲simd规约为一个数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在 binary_op 上归约 x 中关联掩码元素为 true 的所有值。</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> M, <span class="keyword">class</span> V, <span class="keyword">class</span> BinaryOperation &gt;</span></span><br><span class="line"><span class="function"><span class="keyword">typename</span> V::value_type</span></span><br><span class="line"><span class="function"><span class="title">reduce</span><span class="params">( <span class="type">const</span> const_where_expression&lt;M, V&gt;&amp; x,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">typename</span> V::value_type identity_element, BinaryOperation binary_op = &#123;&#125; )</span></span>;</span><br><span class="line"><span class="comment">//在 std::min 上归约 x 中关联掩码元素为 true 的所有值</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> M, <span class="keyword">class</span> V &gt;</span></span><br><span class="line"><span class="function"><span class="keyword">typename</span> V::value_type</span></span><br><span class="line"><span class="function"><span class="title">hmin</span><span class="params">( <span class="type">const</span> const_where_expression&lt;M, V&gt;&amp; x )</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"><span class="comment">//在 std::max 上归约 x 中关联掩码元素为 true 的所有值</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> M, <span class="keyword">class</span> V &gt;</span></span><br><span class="line"><span class="function"><span class="keyword">typename</span> V::value_type</span></span><br><span class="line"><span class="function"><span class="title">hmax</span><span class="params">( <span class="type">const</span> const_where_expression&lt;M, V&gt;&amp; x )</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"><span class="comment">// const_where_expression 包含mask、和simd数据，mask为true才需要规约</span></span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;array&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;experimental/bits/simd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;experimental/simd&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;numeric&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> stdx = std::experimental;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">using</span> V = stdx::native_simd&lt;<span class="type">double</span>&gt;;</span><br><span class="line">    <span class="comment">// 生成数据</span></span><br><span class="line">    <span class="built_in">alignas</span>(stdx::memory_alignment_v&lt;V&gt;) std::array&lt;V::value_type, 1024&gt; data;</span><br><span class="line">    <span class="comment">// [0-1024)</span></span><br><span class="line">    std::<span class="built_in">iota</span>(data.<span class="built_in">begin</span>(), data.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 生成mask</span></span><br><span class="line">    stdx::native_simd_mask&lt;<span class="type">double</span>&gt; sm&#123;<span class="literal">true</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>z; i &lt; sm.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        sm[i] = i % <span class="number">2</span> == <span class="number">0</span>;<span class="comment">//[1,0,1,0....]</span></span><br><span class="line">    &#125;</span><br><span class="line">    V::value_type acc&#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; data.<span class="built_in">size</span>(); i += V::<span class="built_in">size</span>())</span><br><span class="line">        acc += stdx::<span class="built_in">reduce</span>(stdx::<span class="built_in">where</span>(sm, <span class="built_in">V</span>(&amp;data[i], stdx::vector_aligned)), std::plus&#123;&#125;);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sum of data = &quot;</span> &lt;&lt; acc &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;  <span class="comment">// res=0+2+4+6...</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">alignas</span>(stdx::memory_alignment_v&lt;V&gt;) std::array&lt;<span class="type">double</span>, 4&gt; arr&#123;<span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">auto</span> w = <span class="built_in">V</span>(&amp;arr[<span class="number">0</span>], stdx::vector_aligned);</span><br><span class="line">    <span class="comment">// 在下表为偶数下规约</span></span><br><span class="line">    <span class="built_in">assert</span>(stdx::<span class="built_in">hmin</span>(stdx::<span class="built_in">where</span>(sm,w)) == <span class="number">2</span> <span class="keyword">and</span> stdx::<span class="built_in">hmax</span>(stdx::<span class="built_in">where</span>(sm,w)) == <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h3><p><code>&lt;cmath&gt;</code>中除特殊数学函数之外的所有函数，都为 simd 提供了重载。 </p>
+<p><em>注：当前标准库SIMD处于实验阶段，有很多内嵌原语没有提供，如shuffle等</em></p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="矩阵乘法"><a href="#矩阵乘法" class="headerlink" title="矩阵乘法"></a>矩阵乘法</h3><p>设计两个4096*4096矩阵的乘法(cache、simd、omp角度优化,相较于单线程串行，可以达到600倍加速比(4核处理器))，略去，实现可参见代码<a href="../asset/matrix.cpp">matrix.cpp</a></p>
+<h3 id="图像处理"><a href="#图像处理" class="headerlink" title="图像处理"></a>图像处理</h3><p>目标:将一张彩色图片变为灰度图片</p>
+<ul>
+<li>图片是32-bit ARGB类型(0xAARRGGBB)</li>
+<li>灰度计算过程为<code>gray=（11*red+16*green+5*blue）/32</code></li>
+<li>将计算后灰度存入原图片中，alpha 通道不变。</li>
+</ul>
+<h4 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h4><p>定义Pixel结构体 <code>struct Pixel&#123;std::uint8_t b,g,r,a&#125;</code>(小端)，这样可以通过<strong>reinterpret_cast</strong>在uint32_t到Pixel快速转换</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Pixel</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Pixel</span><span class="params">(<span class="type">uint32_t</span> v)</span> : a(v &gt;&gt; <span class="number">24</span>), r(v &gt;&gt; <span class="number">16</span> &amp; <span class="number">0xFF</span>u), g(v &gt;&gt; <span class="number">8</span> &amp; <span class="number">0xFF</span>u), b(v &amp; <span class="number">0xFF</span>u) &#123;</span>&#125;</span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Pixel <span class="type">const</span>&amp; lsh, Pixel <span class="type">const</span>&amp; rsh) &#123;</span><br><span class="line">        <span class="keyword">return</span> lsh.b == rsh.b &amp;&amp; lsh.g == rsh.g &amp;&amp; lsh.r == rsh.r &amp;&amp; lsh.a == rsh.a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">uint8_t</span> b, g, r, a;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Image 类型 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Image = std::vector&lt;Pixel&gt;</span><br></pre></td></tr></table></figure>
+<p>函数接口 <code>to_gray(Image &amp;img)</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_gray1</span><span class="params">(Image&amp; img)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; pixel : img) &#123;</span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> gray = (pixel.r * <span class="number">11</span> + pixel.g * <span class="number">16</span> + pixel.b * <span class="number">5</span>) / <span class="number">32</span>;</span><br><span class="line">        pixel.r = pixel.g = pixel.r = gray;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// std::for_each + unseq 的执行策略</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_gray2</span><span class="params">(Image&amp; img)</span> </span>&#123;</span><br><span class="line">    std::for_each(std::execution::unseq, img.<span class="built_in">begin</span>(), img.<span class="built_in">end</span>(), [](Pixel&amp; pixel) &#123;</span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> gray = (pixel.r * <span class="number">11</span> + pixel.g * <span class="number">16</span> + pixel.b * <span class="number">5</span>) / <span class="number">32</span>;</span><br><span class="line">        pixel.r = pixel.g = pixel.r = gray;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>to_gary1和to_gray2都是对Image中的每个像素进行计算，to_gray2使用了C++的执行策略，但实际对运行事件影响不大。</p>
+<h4 id="错误的SIMD优化"><a href="#错误的SIMD优化" class="headerlink" title="错误的SIMD优化"></a>错误的SIMD优化</h4><p>介绍SIMD优化之前，先看一个典型的错误实现，由于gray是r、g、b与比例进行reduce,一个可能的实现如下：<br><img src="/../img/non_invasive_simd.png" alt="non_invasive_simd"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> stdx = std::experimental;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> PixelSIMD   = stdx::fixed_size_simd&lt;<span class="type">uint8_t</span>, <span class="number">4</span>&gt;; <span class="comment">//一个像素就是一个4个int8的vector</span></span><br><span class="line"><span class="keyword">using</span> ImageSIMD   = std::vector&lt;PixelSIMD&gt;;</span><br><span class="line"><span class="keyword">using</span> Pixel32SIMD = stdx::fixed_size_simd&lt;<span class="type">uint32_t</span>, <span class="number">4</span>&gt;;</span><br><span class="line"><span class="keyword">using</span> Pixel32Mask = PixelSIMD::mask_type;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">uint32_t</span> gray_coeff[<span class="number">4</span>]&#123;<span class="number">5</span>, <span class="number">16</span>, <span class="number">11</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span>  <span class="title">to_gray3</span><span class="params">(ImageSIMD&amp; img)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Pixel32Mask mask&#123;&#125;;</span></span><br><span class="line">    <span class="comment">// for (int i = 0; i &lt; mask.size(); i++) &#123;</span></span><br><span class="line">    <span class="comment">//     mask[i] = i &lt; 3;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="function">Pixel32SIMD <span class="title">gray_vector</span><span class="params">(gray_coeff, stdx::element_aligned)</span></span>;<span class="comment">// 这里获取权重的vector，由于reduce会溢出，需要升级到int32</span></span><br><span class="line">    <span class="keyword">for</span> (PixelSIMD&amp; p8 : img) &#123;</span><br><span class="line">        <span class="type">const</span> Pixel32SIMD pixel = p8;</span><br><span class="line">        <span class="type">const</span> <span class="type">uint32_t</span>    gray  = stdx::<span class="built_in">reduce</span>(pixel * gray_vector) / <span class="number">32u</span>;<span class="comment">//规约</span></span><br><span class="line">        p8[<span class="number">0</span>] = p8[<span class="number">1</span>] = p8[<span class="number">2</span>] = gray; <span class="comment">// 这里应该运行一个simd双调选择(基于mask)，标准库目前没有，等待C++26吧</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码通过SIMD将计算gray的过程变成对SIMD的规约，但通过比较时间，可以发现：<strong>程序变得更慢</strong>，原因很简单：程序并没有真正的实现数据并行化，我们使用4个不同的值，因此不得不在SIMD操作后进行规约，这个规约严重影响的程序的效率。</p>
+<h4 id="正确的SIMD优化"><a href="#正确的SIMD优化" class="headerlink" title="正确的SIMD优化"></a>正确的SIMD优化</h4><p>我们期望的数据并行化应该是:<strong>多个像素点被同时处理</strong>。因此，我们可以将<br><code>gray = (pixel.r * 11 + pixel.g * 16 + pixel.b * 5) / 32</code><br>替换为<br><code>stdx::simd&lt;uint32_t&gt; r,g,b; </code><br><code>auto gary = (r * 11 + g * 16 + b * 5) / 32</code><br>上述<code>r、g、b</code> 是int32的向量，每个int32表示一个像素点某个通道(如r表示4个像素点的r通道)，通过simd可以对多个像素的rgb进行同时计算,如下图所示。<br><img src="/../img/simd_pall.png" alt="simd_pall"><br>问题也就转化为如何得到<code>r、g、b</code>SIMD向量，通过将Pixel定义为uint32,可以通过简单的移位和按位与操作集即可得到rgba分量(这里需要注意大小端的问题)。<br>代码实现如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Pixel32 = <span class="type">uint32_t</span>; <span class="comment">//0XFFAARRGGBB</span></span><br><span class="line"><span class="keyword">using</span> Image32 = std::vector&lt;<span class="type">uint32_t</span>&gt;;</span><br><span class="line"><span class="keyword">using</span> PixelV  = stdx::native_simd&lt;Pixel32&gt;; <span class="comment">//Pixel的向量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_gray4</span><span class="params">(Image32&amp; img)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = img.<span class="built_in">begin</span>(); it &lt; img.<span class="built_in">end</span>(); it += PixelV::<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="function">PixelV     <span class="title">p</span><span class="params">(&amp;*it, stdx::element_aligned)</span></span>;  <span class="comment">//load</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> a     = p &gt;&gt; <span class="number">24</span>;             <span class="comment">// a通道的SIMD向量</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> r     = p &gt;&gt; <span class="number">16</span> &amp; <span class="number">0xFF</span>u;     <span class="comment">// r通道的SIMD向量</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> g     = p &gt;&gt; <span class="number">8</span> &amp; <span class="number">0xFF</span>u;      <span class="comment">// g通道的SIMD向量</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> b     = p &amp; <span class="number">0xFF</span>u;           <span class="comment">// b通道的SIMD向量</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> grayv = (r * <span class="number">11u</span> + g * <span class="number">16u</span> + b * <span class="number">5u</span>) / <span class="number">32u</span>; <span class="comment">// 计算gray的SIMD向量</span></span><br><span class="line">        p  = grayv | (grayv &lt;&lt; <span class="number">8</span>) | (grayv &lt;&lt; <span class="number">16</span>) | (a &lt;&lt; <span class="number">24</span>); </span><br><span class="line">        p.<span class="built_in">copy_to</span>(&amp;*it, stdx::element_aligned);  <span class="comment">// store</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设计算机使用的是<em>avx2</em>指令集，PixelV一次可以处理8个像素点，从而达到数据的并行化，上述代码在load、store是采用<em>element_aligned</em> 的标志，使用<em>vector_aligned</em>会加快速度。</p>
+<h4 id="效率对比"><a href="#效率对比" class="headerlink" title="效率对比"></a>效率对比</h4><p>完整代码见<a href="../asset/simd_test.cpp">simd_test.cpp</a>，通过<code>g++ simd_test.cpp -std=c++23 -o main -mavx2 -O3</code>编译axv2指令下的程序，运行即可得到不同方案的时间消耗，一个可能的结果如图所示：</p>
+<style>
+.center 
+{
+  width: auto;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<p align="center"><font face="黑体" size=2.>效果对比</font></p>
+
+<div class="center">
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">to_gray1</th>
+<th align="center">to_gray2</th>
+<th align="center">to_gray3</th>
+<th align="center">to_gray4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>128K</strong></td>
+<td align="center">0.62</td>
+<td align="center">0.63</td>
+<td align="center">1.27</td>
+<td align="center"><strong>0.22</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>1M</strong></td>
+<td align="center">2.3</td>
+<td align="center">2.2</td>
+<td align="center">2.5</td>
+<td align="center"><strong>1.1</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>4M</strong></td>
+<td align="center">7.9</td>
+<td align="center">7.9</td>
+<td align="center">11</td>
+<td align="center"><strong>5.6</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>16M</strong></td>
+<td align="center">37</td>
+<td align="center">41</td>
+<td align="center">37</td>
+<td align="center"><strong>19</strong></td>
+</tr>
+</tbody></table>
+</div>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F"><span class="toc-number">1.</span> <span class="toc-text">序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SIMD%E5%86%85%E5%B5%8C%E5%8E%9F%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">SIMD内嵌原语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STL%E4%B8%AD%E7%9A%84SIMD"><span class="toc-number">3.</span> <span class="toc-text">STL中的SIMD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SIMD-%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text">SIMD 类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SIMD-%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">SIMD 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load-store"><span class="toc-number">3.4.</span> <span class="toc-text">load &amp; store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE"><span class="toc-number">3.5.</span> <span class="toc-text">访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="toc-number">3.6.</span> <span class="toc-text">算术运算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E7%BA%A6%E5%87%BD%E6%95%B0-reduce%E3%80%81hmin%E3%80%81hmax"><span class="toc-number">3.7.</span> <span class="toc-text">规约函数 reduce、hmin、hmax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-number">3.8.</span> <span class="toc-text">数学函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">矩阵乘法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86"><span class="toc-number">4.2.</span> <span class="toc-text">图像处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.1.</span> <span class="toc-text">简单实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84SIMD%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.2.</span> <span class="toc-text">错误的SIMD优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84SIMD%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.3.</span> <span class="toc-text">正确的SIMD优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E5%AF%B9%E6%AF%94"><span class="toc-number">4.2.4.</span> <span class="toc-text">效率对比</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/31/SIMD/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/31/SIMD/&text=C++中的SIMD支持"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/31/SIMD/&is_video=false&description=C++中的SIMD支持"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C++中的SIMD支持&body=Check out this article: http://example.com/2023/12/31/SIMD/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/31/SIMD/&title=C++中的SIMD支持"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/31/SIMD/&name=C++中的SIMD支持&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/31/SIMD/&t=C++中的SIMD支持"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    Yuinhai
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
