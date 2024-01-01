@@ -9,7 +9,7 @@
     <meta name="description" content="背景inline关键字一直被认为去声明内联函数(优先采用函数的内联替换而非进行函数调用)，然而关键词 inline 的含义是非强制的，编译器拥有对任何未标记为inline的函数使用内联替换的自由，和对任何标记为 inline 的函数生成函数调用的自由。换句话说函数是否内联，与是否被inlineo标识无关，而由编译器(优化参数)决定。 ODR(one define rule) 单一定义原则ORD的要">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅析C++中的inline关键字">
-<meta property="og:url" content="http://example.com/2023/12/13/inline/index.html">
+<meta property="og:url" content="https://github.com/lzl200110.github.io/2023/12/13/inline/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="背景inline关键字一直被认为去声明内联函数(优先采用函数的内联替换而非进行函数调用)，然而关键词 inline 的含义是非强制的，编译器拥有对任何未标记为inline的函数使用内联替换的自由，和对任何标记为 inline 的函数生成函数调用的自由。换句话说函数是否内联，与是否被inlineo标识无关，而由编译器(优化参数)决定。 ODR(one define rule) 单一定义原则ORD的要">
 <meta property="og:locale">
@@ -24,17 +24,17 @@
     
       
         
-          <link rel="shortcut icon" href="/images/favicon.ico">
+          <link rel="shortcut icon" href="/lzl200110.github.io/images/favicon.ico">
         
       
       
         
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          <link rel="icon" type="image/png" href="/lzl200110.github.io/images/favicon-192x192.png" sizes="192x192">
         
       
       
         
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          <link rel="apple-touch-icon" sizes="180x180" href="/lzl200110.github.io/images/apple-touch-icon.png">
         
       
     
@@ -49,7 +49,7 @@
 
     <!-- styles -->
     
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/lzl200110.github.io/css/style.css">
 
     <!-- persian styles -->
     
@@ -58,7 +58,7 @@
     
 	<!-- mathjax -->
 	
-<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/lzl200110.github.io/atom.xml" title="Hexo" type="application/atom+xml">
 </head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -71,13 +71,13 @@
     <span id="nav">
       <ul>
         <!--
-       --><li><a href="/">Home</a></li><!--
+       --><li><a href="/lzl200110.github.io/">Home</a></li><!--
      --><!--
-       --><li><a href="/about/">About</a></li><!--
+       --><li><a href="/lzl200110.github.io/about/">About</a></li><!--
      --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
+       --><li><a href="/lzl200110.github.io/archives/">Writing</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+       --><li><a href="http://github.com/probberechts">Projects</a></li><!--
      -->
       </ul>
     </span>
@@ -85,10 +85,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post" href="/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post" href="/lzl200110.github.io/2023/12/14/Visitor%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="Next post" href="/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post" href="/lzl200110.github.io/2023/12/13/wayland%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -101,17 +101,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/13/inline/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/13/inline/&text=浅析C++中的inline关键字"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/13/inline/&is_video=false&description=浅析C++中的inline关键字"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=浅析C++中的inline关键字&body=Check out this article: http://example.com/2023/12/13/inline/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/13/inline/&name=浅析C++中的inline关键字&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/13/inline/&t=浅析C++中的inline关键字"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/lzl200110.github.io/2023/12/13/inline/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&text=浅析C++中的inline关键字"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&is_video=false&description=浅析C++中的inline关键字"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅析C++中的inline关键字&body=Check out this article: https://github.com/lzl200110.github.io/2023/12/13/inline/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&name=浅析C++中的inline关键字&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/lzl200110.github.io/2023/12/13/inline/&t=浅析C++中的inline关键字"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -152,14 +152,14 @@
       
     <div class="article-category">
         <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/c/">c++</a>
+        <a class="category-link" href="/lzl200110.github.io/categories/c/">c++</a>
     </div>
 
 
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/ODR/" rel="tag">ODR</a>, <a class="p-category" href="/tags/c/" rel="tag">c++</a>, <a class="p-category" href="/tags/inline/" rel="tag">inline</a>
+        <a class="p-category" href="/lzl200110.github.io/tags/ODR/" rel="tag">ODR</a>, <a class="p-category" href="/lzl200110.github.io/tags/c/" rel="tag">c++</a>, <a class="p-category" href="/lzl200110.github.io/tags/inline/" rel="tag">inline</a>
     </div>
 
 
@@ -222,13 +222,13 @@
     <div id="nav-footer" style="display: none">
       <ul>
         
-          <li><a href="/">Home</a></li>
+          <li><a href="/lzl200110.github.io/">Home</a></li>
         
-          <li><a href="/about/">About</a></li>
+          <li><a href="/lzl200110.github.io/about/">About</a></li>
         
-          <li><a href="/archives/">Writing</a></li>
+          <li><a href="/lzl200110.github.io/archives/">Writing</a></li>
         
-          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+          <li><a href="http://github.com/probberechts">Projects</a></li>
         
       </ul>
     </div>
@@ -242,17 +242,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/12/13/inline/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/12/13/inline/&text=浅析C++中的inline关键字"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/12/13/inline/&is_video=false&description=浅析C++中的inline关键字"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=浅析C++中的inline关键字&body=Check out this article: http://example.com/2023/12/13/inline/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/12/13/inline/&name=浅析C++中的inline关键字&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/12/13/inline/&t=浅析C++中的inline关键字"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/lzl200110.github.io/2023/12/13/inline/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&text=浅析C++中的inline关键字"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&is_video=false&description=浅析C++中的inline关键字"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅析C++中的inline关键字&body=Check out this article: https://github.com/lzl200110.github.io/2023/12/13/inline/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&title=浅析C++中的inline关键字"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/lzl200110.github.io/2023/12/13/inline/&name=浅析C++中的inline关键字&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/lzl200110.github.io/2023/12/13/inline/&t=浅析C++中的inline关键字"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -282,13 +282,13 @@
     <nav>
       <ul>
         <!--
-       --><li><a href="/">Home</a></li><!--
+       --><li><a href="/lzl200110.github.io/">Home</a></li><!--
      --><!--
-       --><li><a href="/about/">About</a></li><!--
+       --><li><a href="/lzl200110.github.io/about/">About</a></li><!--
      --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
+       --><li><a href="/lzl200110.github.io/archives/">Writing</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+       --><li><a href="http://github.com/probberechts">Projects</a></li><!--
      -->
       </ul>
     </nav>
@@ -336,7 +336,7 @@
   </script>
 
 
-<script src="/js/main.js"></script>
+<script src="/lzl200110.github.io/js/main.js"></script>
 
 <!-- search -->
 
