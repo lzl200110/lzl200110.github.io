@@ -4,12 +4,18 @@
   
     
     <entry>
-      <title></title>
+      <title>简述 C++ 序列化(1 int压缩)</title>
       <link href="/2025/03/12/C++%E5%BA%8F%E5%88%97%E5%8C%96%201(varint)/"/>
       <url>/2025/03/12/C++%E5%BA%8F%E5%88%97%E5%8C%96%201(varint)/</url>
       
         <content type="html"><![CDATA[<h2 id="整数压缩"><a href="#整数压缩" class="headerlink" title="整数压缩"></a>整数压缩</h2><p>当我们将一个uint(4字节)以2进制的形式写入文件时,一定占用4个字节大小,然而uint的范围为<code>[0-4294967295]</code>大多数情况下我们可能永不到这么多位,也就导致二进制存储中记录的过多的<strong>高位0</strong>,如42存储为<strong>0b00000000’00000000’00000000’00101010</strong>,因此就出现了varint编码int,其使用1 bit(高位)来记录是否最后一个字节,剩下7bit记录数据,将int转化为1-5字节的可变长编码,如下所示</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">* +-------------------------------------+----------------------+</span><br><span class="line">* | 存储格式                             | 数值范围              |</span><br><span class="line">* +-------------------------------------+----------------------+</span><br><span class="line">* | 0XXXXXXX                            | (0 ~ 127)            |</span><br><span class="line">* | 1XXXXXXX 0XXXXXXX                   | (128 ~ 16511)        |</span><br><span class="line">* | 1XXXXXXX 1XXXXXXX 0XXXXXXX          | (16512 ~ 2113663)    |</span><br><span class="line">* | 1XXXXXXX 1XXXXXXX 1XXXXXXX 0XXXXXXX | (211366 ~ 270549119) |</span><br><span class="line">* | ... 以此类拟 ...                     |                      |</span><br><span class="line">* +-------------------------------------+----------------------+</span><br></pre></td></tr></table></figure><p>42 被编码为 00101010, 170编码为 10000001’00101010,可以视作去掉最高位,其他和起来就是原来的数据,由于在网络传输过程中,涉及到大端序和小端序的转变,实际转化如下所示<br><img src="/../img/123456varint%E7%BC%96%E7%A0%81.png" alt="alt text"></p><ol><li>123456 用二进制表示为1 11100010 01000000，</li><li>每次从低向高取 7位 变成111 1000100 1000000</li><li>大端序转为小端序，即交换字节顺序变成1000000 1000100 111</li><li>然后加上最高有效位(即：最后一个字节高位补0，其余各字节高位补1)变成11000000 11000100 00000111</li><li>最后再转成 10进制，所以经过 varint 编码后 123456 占用三个字节分别为192 196 7。</li></ol><h3 id="有符号编码"><a href="#有符号编码" class="headerlink" title="有符号编码"></a>有符号编码</h3><p>对于有符号类型如sint,若其为负数,则符号位一定为1,这也就导致编码是一定会使用5个字节编码,对于这种情况,先使用<strong>zigzag编码</strong>，将正数、负数和0都映射到无符号数，最后再采用 varint 编码。<br>zigzag 是将符号数统一映射到无符号号数的一种编码方案，具体映射函数为：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zigzag(n) = (n &lt;&lt; 1) ^ (n &gt;&gt; 31), n 为 sint32 时</span><br><span class="line">zigzag(n) = (n &lt;&lt; 1) ^ (n &gt;&gt; 63), n 为 sint64 时</span><br></pre></td></tr></table></figure><p>解释为循环左移一位,将符号位变为最低位,然后高位取反,最低位不变即可.</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">decode(n) = (n &gt;&gt; 1) ^ -(n &amp; 1);</span><br></pre></td></tr></table></figure><p>解码时右移一位,将符号为移动到最高位,低位取反,最高为不变</p>]]></content>
       
+      
+      <categories>
+          
+          <category> c++ </category>
+          
+      </categories>
       
       
     </entry>
@@ -36,7 +42,7 @@
     
     
     <entry>
-      <title>C++中字符串与数值类型h转换</title>
+      <title>C++中字符串与数值类型转换</title>
       <link href="/2024/03/12/C++%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/"/>
       <url>/2024/03/12/C++%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</url>
       
