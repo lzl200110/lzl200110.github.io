@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="准备C++11 提供了聚合初始化,假设我们有一个类 Person 1234strcu Person&#123;    std::string name;    int age;&#125;; C++ 会为我们提供聚合初始化,如,同时也支持结构化绑定将Person结构解包: 12345Person p1&#123;&#125;;Person p2&#123;&quot;&quot;, 1&#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="准备C++11 提供了聚合初始化,假设我们有一个类 Person 1234strcu Person&#123;    std::string name;    int age;&#125;; C++ 会为我们提供聚合初始化,如,同时也支持结构化绑定将Person结构解包: 12345Person p1&#123;&#125;;Person p2&#123;&quot;&quot;, 1&#125;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-03-05T09:06:53.590Z">
+<meta property="article:modified_time" content="2025-03-05T09:07:31.140Z">
+<meta property="article:author" content="Yuinhai">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Hexo</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/03/12/C++%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E4%B8%AA%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">获取参数个数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E5%80%BC"><span class="toc-number">3.</span> <span class="toc-text">获取成员值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%90%8D%E7%A7%B0"><span class="toc-number">4.</span> <span class="toc-text">获取成员变量名称</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">反射实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Yuinhai</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-05T09:06:53.590Z" class="dt-published" itemprop="datePublished">2025-03-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>C++11 提供了聚合初始化,假设我们有一个类 Person</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">strcu Person&#123;</span><br><span class="line">    std::string name;</span><br><span class="line">    int age;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>C++ 会为我们提供聚合初始化,如,同时也支持<strong>结构化绑定</strong>将Person结构解包:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Person p1&#123;&#125;;</span><br><span class="line">Person p2&#123;&quot;&quot;, 1&#125;;</span><br><span class="line">Person p3&#123;&quot;&quot;&#125;;</span><br><span class="line"></span><br><span class="line">auto [x,y]= p1;</span><br></pre></td></tr></table></figure>
+
+<p><strong>但当我们多个构造函数多一个参数</strong>,那么就会报错,所以我们可以实现能一个转化为任意类型的类Any,并使用Any检查类Person聚合初始化接受的成员个数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Any 可以转化为任何类型</span><br><span class="line">struct Any&#123;</span><br><span class="line">    template&lt;typename T&gt;</span><br><span class="line">    operator T();</span><br><span class="line">&#125;;</span><br><span class="line">Person &#123;Any&#123;&#125;,Any&#123;&#125;,Any&#123;&#125;&#125; //报错,参数过多</span><br></pre></td></tr></table></figure>
+<h2 id="获取参数个数"><a href="#获取参数个数" class="headerlink" title="获取参数个数"></a>获取参数个数</h2><p>我们就可以使用Any适配person的类型,并结合参数包展开判断Person聚合初始化接受的成员个数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T, typename... Args&gt;</span><br><span class="line">consteval auto count() &#123;</span><br><span class="line">    if constexpr (requires &#123; T&#123;Args&#123;&#125;..., Any&#123;&#125;&#125;; &#125;) &#123;</span><br><span class="line">        return count&lt;T, Args..., Any&gt;();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return sizeof...(Args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">std::cout &lt;&lt; count&lt;Person&gt;() &lt;&lt; &#x27;\n&#x27;;</span><br></pre></td></tr></table></figure>
+<p>这里讲解一下原理,<code>requires &#123; T&#123;Args&#123;&#125;..., Any&#123;&#125;&#125;; &#125;</code> 检查T能否接受<em>Args+1</em>个参数,如果支持,就增加一个参数,如果不支持,就说明T支持 sizeof…(Args)个参数</p>
+<h2 id="获取成员值"><a href="#获取成员值" class="headerlink" title="获取成员值"></a>获取成员值</h2><p>得到 参数个数之后,我们就可以通过<strong>结构化</strong>绑定解包Person 对象,调用指定函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">constexpr void visitMembers(auto&amp;&amp; obj, auto&amp;&amp; visit) &#123;</span><br><span class="line">    constexpr auto Cnt = count&lt;decltype(obj)&gt;();</span><br><span class="line">    if constexpr (Cnt == 0) &#123;</span><br><span class="line">        return visit();</span><br><span class="line">    &#125;</span><br><span class="line">    if constexpr (Cnt == 1) &#123;</span><br><span class="line">        auto&amp;&amp; [v1] = obj;</span><br><span class="line">        return visit(v1);</span><br><span class="line">    &#125;</span><br><span class="line">    if constexpr (Cnt == 2) &#123;</span><br><span class="line">        auto&amp;&amp; [v1, v2] = obj;</span><br><span class="line">        return visit(v1, v2);</span><br><span class="line">    &#125;</span><br><span class="line">    if constexpr (Cnt == 3) &#123;</span><br><span class="line">        auto&amp;&amp; [v1, v2, v3] = obj;</span><br><span class="line">        return visit(v1, v2, v3);</span><br><span class="line">    &#125;</span><br><span class="line">    ... </span><br><span class="line">&#125;</span><br><span class="line">Person         p3&#123;&quot;&quot;&#125;;</span><br><span class="line">auto   func = [](const std::string&amp; s, int v) &#123; std::cout &lt;&lt; s &lt;&lt; &quot; &quot; &lt;&lt; v &lt;&lt; &#x27;\n&#x27;; &#125;;</span><br><span class="line">visitMembers(Person&#123;&quot;123&quot;, 1&#125;, func);</span><br><span class="line">visitMembers(p3, func);</span><br></pre></td></tr></table></figure>
+<p>如果我们传入一个左值引用到visitMembers<code>constexpr auto Cnt = count&lt;decltype(obj)&gt;()</code>,<strong>count</strong>函数无法准确计算需要的参数个数,因此需要<br>使用<code>std::remove_cvref_t&lt;decltype(obj)&gt;</code>去除cv reference;</p>
+<h2 id="获取成员变量名称"><a href="#获取成员变量名称" class="headerlink" title="获取成员变量名称"></a>获取成员变量名称</h2><p>gcc clang编译器提供了<code>__PRETTY_FUNCTION__</code>宏,可以获取调用函数的信息,如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int foo(int) &#123;</span><br><span class="line">    std::cout &lt;&lt; __PRETTY_FUNCTION__ &lt;&lt; &#x27;\n&#x27;; \\打印 int foo(int)</span><br><span class="line">    return -1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int foo(double) &#123;</span><br><span class="line">    std::cout &lt;&lt; __PRETTY_FUNCTION__ &lt;&lt; &#x27;\n&#x27;; \\打印 int foo(double)</span><br><span class="line">    return -1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">void foo(T v) &#123;</span><br><span class="line">    std::cout &lt;&lt; __PRETTY_FUNCTION__ &lt;&lt; &#x27;\n&#x27;; </span><br><span class="line">&#125;</span><br><span class="line">foo(&#123;Person&#125;)  \\打印 void foo(T) [with T = Person]</span><br></pre></td></tr></table></figure>
+<p>由于静态变量的指针是一个常量,可以作为模板参数传入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 使用auto可以接受非类型模板</span><br><span class="line">template &lt;auto T&gt;</span><br><span class="line">void foo() &#123;</span><br><span class="line">    std::cout &lt;&lt; __PRETTY_FUNCTION__ &lt;&lt; &#x27;\n&#x27;; </span><br><span class="line">&#125;</span><br><span class="line">static const Person p&#123;&#125;;</span><br><span class="line">foo&lt;&amp;Person::age&gt;(); // void foo() [with auto T = &amp;Person::age]</span><br></pre></td></tr></table></figure>
+<p>这样我们就获成员变量名称</p>
+<h2 id="反射实现"><a href="#反射实现" class="headerlink" title="反射实现"></a>反射实现</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们希望实现如下功能,获取Person的成员名称</span><br><span class="line">constexpr auto arr = get_member_names&lt;Person&gt;();</span><br><span class="line">for (auto name : arr) &#123;</span><br><span class="line">    std::cout &lt;&lt; name &lt;&lt; &quot;, &quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt;</span><br><span class="line">inline constexpr std::array&lt;std::string_view, members_count_v&lt;T&gt;&gt; get_member_names() &#123;</span><br><span class="line">    auto arr = _get_member_names&lt;T&gt;();</span><br><span class="line">    return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 1. 获取成员个数, 2 将类型 T 转化为tuple ,3 获取tuple 中每个类型的名称</span><br><span class="line">// 第一点前面已经实现</span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">inline constexpr std::array&lt;std::string_view, members_count_v&lt;T&gt;&gt; _get_member_names() &#123;</span><br><span class="line">    //获取成员个数</span><br><span class="line">    constexpr size_t                    Count = members_count_v&lt;T&gt;;</span><br><span class="line">    std::array&lt;std::string_view, Count&gt; arr;</span><br><span class="line">    // 得到 tuple&lt;成员指针...&gt;</span><br><span class="line">    constexpr auto tp = struct_to_tuple&lt;T&gt;();</span><br><span class="line"></span><br><span class="line">    // 使用魔法, 遍历每一个成员指针 以实例化模版, to 成员名称, 然后保存到 arr里面</span><br><span class="line">    [&amp;]&lt;size_t... Is&gt;(std::index_sequence&lt;Is...&gt;) mutable &#123; ((arr[Is] = get_member_name&lt;wrap(std::get&lt;Is&gt;(tp))&gt;()), ...); &#125;(std::make_index_sequence&lt;Count&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line">    return arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;class T&gt;</span><br><span class="line">inline constexpr auto struct_to_tuple() &#123;</span><br><span class="line">    return object_tuple_view_helper&lt;T, members_count_v&lt;T&gt;&gt;::tuple_view();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来我们看 <code>object_tuple_view_helper&lt;T, members_count_v&lt;T&gt;&gt;::tuple_view()</code> 这是将T转化为tuple 的核心</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">//object_tuple_view_helper 主模板 ,我们需要实现对应特化</span><br><span class="line">template &lt;class T, std::size_t n&gt;</span><br><span class="line">struct object_tuple_view_helper &#123;</span><br><span class="line">    static constexpr auto tuple_view() &#123;</span><br><span class="line">        static_assert(sizeof(T) &lt; 0, &quot;\n\nThis error occurs for one of two reasons:\n\n&quot;</span><br><span class="line">                                     &quot;1) You have created a struct with more than 100 fields, which is &quot;</span><br><span class="line">                                     &quot;unsupported. \n\n&quot;</span><br><span class="line">                                     &quot;2) Your struct is not an aggregate type.\n\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static constexpr auto tuple_view(T&amp;) &#123;</span><br><span class="line">        static_assert(sizeof(T) &lt; 0, &quot;\n\nThis error occurs for one of two reasons:\n\n&quot;</span><br><span class="line">                                     &quot;1) You have created a struct with more than 100 fields, which is &quot;</span><br><span class="line">                                     &quot;unsupported. \n\n&quot;</span><br><span class="line">                                     &quot;2) Your struct is not an aggregate type.\n\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    template &lt;typename Visitor&gt;</span><br><span class="line">    static constexpr decltype(auto) tuple_view(T&amp;&amp;, Visitor&amp;&amp;) &#123;</span><br><span class="line">        static_assert(sizeof(T) &lt; 0, &quot;\n\nThis error occurs for one of two reasons:\n\n&quot;</span><br><span class="line">                                     &quot;1) You have created a struct with more than 100 fields, which is &quot;</span><br><span class="line">                                     &quot;unsupported. \n\n&quot;</span><br><span class="line">                                     &quot;2) Your struct is not an aggregate type.\n\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">// 参数个数为 0 特化</span><br><span class="line">template &lt;class T&gt;</span><br><span class="line">struct object_tuple_view_helper&lt;T, 0&gt; &#123;</span><br><span class="line">    static constexpr auto tuple_view() &#123;</span><br><span class="line">        return std::tie();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static constexpr auto tuple_view(T&amp;) &#123;</span><br><span class="line">        return std::tie();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    template &lt;typename Visitor&gt;</span><br><span class="line">    static constexpr decltype(auto) tuple_view(T&amp;&amp;, Visitor&amp;&amp;) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line">// 参数个数为 n 特化, 因为需要对任意个参数的支持,这里宏实现了 1-255 个参数</span><br><span class="line">// auto&amp; [__VA_ARGS__] = remove_cvref_t&lt;T&gt;() 构造T 结构化绑定到 __VA_ARGS__</span><br><span class="line">// 使用 tie 构造 tuple   auto ref_tup  = std::tie(__VA_ARGS__);  </span><br><span class="line">// 然后调用函数, 以展开, 并且取地址,将tuple&lt;T&gt; 变为 (返回是tuple&lt;成员指针...&gt;)&quot;</span><br><span class="line">#define RFL_INTERNAL_OBJECT_IF_YOU_SEE_AN_ERROR_REFER_TO_DOCUMENTATION_ON_C_ARRAYS(n, ...)                                                                                         \</span><br><span class="line">    template &lt;class T&gt;                                                                                                                                                             \</span><br><span class="line">    struct object_tuple_view_helper&lt;T, n&gt; &#123;                                                                                                                                        \</span><br><span class="line">        static constexpr auto tuple_view() &#123;                                                                                                                                       \</span><br><span class="line">            (void)&quot;// 获取 T也就是struct的全局静态引用, 然后将其 成员变量 结构化绑定 到__VA_ARGS__&quot;;                                                                               \</span><br><span class="line">            auto&amp; [__VA_ARGS__] = remove_cvref_t&lt;T&gt;();                                                                                                            \</span><br><span class="line">            (void)&quot;// 然后使用 tie 将他们按照左值引用, 绑定为 tuple&quot;;                                                                                                              \</span><br><span class="line">            auto ref_tup  = std::tie(__VA_ARGS__);                                                                                                                                 \</span><br><span class="line">            auto get_ptrs = [](auto&amp;... _refs) &#123; return std::make_tuple(&amp;_refs...); &#125;;                                                                                             \</span><br><span class="line">            (void)&quot;// 然后调用函数, 以展开, 并且取地址 也就是 成员指针?! (返回是tuple&lt;成员指针...&gt;)&quot;;                                                                              \</span><br><span class="line">            return std::apply(get_ptrs, ref_tup);                                                                                                                                  \</span><br><span class="line">        &#125;                                                                                                                                                                          \</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>第三步 获取tuple 中每个类型的名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 1️成员指针.. 调用get_member_name 函数, 使用__PRETTY_FUNCTION__获取名称</span><br><span class="line">template &lt;auto ptr&gt;</span><br><span class="line">inline constexpr std::string_view get_member_name() &#123;</span><br><span class="line">constexpr std::string_view func_name = __PRETTY_FUNCTION__;</span><br><span class="line">#if defined(__clang__)</span><br><span class="line">    auto split = func_name.substr(0, func_name.size() - 2);</span><br><span class="line">    return split.substr(split.find_last_of(&quot;:.&quot;) + 1);</span><br><span class="line">#elif defined(__GNUC__)</span><br><span class="line">    auto split = func_name.substr(0, func_name.rfind(&quot;)&#125;&quot;));</span><br><span class="line">    return split.substr(split.find_last_of(&quot;:&quot;) + 1);</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整代码见<a href="/asset/reflect.cpp">log.hpp</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E4%B8%AA%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">获取参数个数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E5%80%BC"><span class="toc-number">3.</span> <span class="toc-text">获取成员值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%90%8D%E7%A7%B0"><span class="toc-number">4.</span> <span class="toc-text">获取成员变量名称</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">反射实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/05/C++%E5%8F%8D%E5%B0%84/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    Yuinhai
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
